@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Rewriting & Style Transformation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0e1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background: radial-gradient(circle at 50% 0%, #1c2744, #101524);
+      box-sizing: border-box;
+      padding: 35px 45px;
+      display: flex;
+      flex-direction: column;
+      color: #e0e0e0;
+      overflow: auto;
+      position: relative;
+      animation: fadeIn 1s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.98); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .slide-header {
+      text-align: center;
+      margin-bottom: 20px;
+      flex-shrink: 0;
+    }
+
+    .slide-header h1 {
+      font-size: 42px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 5px 0;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 15px rgba(65, 224, 208, 0.4);
+    }
+
+    .slide-header h2 {
+      font-size: 18px;
+      font-weight: 300;
+      color: #a0b0d0;
+      margin: 0;
+    }
+
+    .grid-container {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+       
+      gap: 20px;
+      height: 100%;
+    }
+
+    .panel {
+      background: rgba(23, 31, 52, 0.6);
+      border: 1px solid rgba(128, 147, 196, 0.15);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+
+    .panel h3 {
+      font-size: 17px;
+      font-weight: 600;
+      color: #98b3e9;
+      margin-top: 0;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(128, 147, 196, 0.2);
+      flex-shrink: 0;
+    }
+    
+    .code-container {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        padding: 12px; 
+        flex-grow: 1;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+    .code-container::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+    }
+
+    pre, code {
+      font-family: 'Fira Code', monospace;
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: #cdd5f4;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin: 0;
+      padding: 0;
+      background: none;
+    }
+
+    code .token.comment { color: #6a9955; }
+    code .token.keyword { color: #c586c0; }
+    code .token.string { color: #ce9178; }
+    code .token.function { color: #dcdcaa; }
+    code .token.number { color: #b5cea8; }
+    code .token.operator { color: #d4d4d4; }
+    code .token.punctuation { color: #d4d4d4; }
+
+    #rewriting-results .results-list {
+        overflow-y: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    #rewriting-results .results-list::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .result-item {
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      line-height: 1.5;
+      padding-left: 15px;
+      border-left: 3px solid;
+      position: relative;
+    }
+    .result-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .result-item strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #c0d0f0;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .result-item.original { border-color: #E91E63; }
+    .result-item.professional { border-color: #4CAF50; }
+    .result-item.casual { border-color: #2196F3; }
+    .result-item.academic { border-color: #9C27B0; }
+    .result-item.marketing { border-color: #FF9800; }
+    
+    #advanced-features .customized-rewrite {
+        background: rgba(10, 25, 47, 0.4);
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 12.5px;
+        line-height: 1.5;
+        margin-top: 15px;
+        border-left: 3px solid #41E0D0;
+        font-style: italic;
+        color: #b0c4de;
+    }
+
+    #applications ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    #applications li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 12px;
+    }
+     #applications li:last-child {
+        margin-bottom: 0;
+    }
+
+    #applications li span {
+        display: inline-block;
+        margin-right: 12px;
+        font-size: 18px;
+        line-height: 1.4;
+    }
+    
+    #applications li div {
+        flex: 1;
+    }
+    
+    #applications li strong {
+        color: #98b3e9;
+        font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slide">
+    <header class="slide-header">
+      <h1>Text Rewriting & Style Transformation</h1>
+      <h2>Adapt Content Tone and Style with LiteLLM</h2>
+    </header>
+
+    <main class="grid-container">
+      <div class="panel" id="flexible-system">
+        <h3>Flexible Rewriting System</h3>
+        <div class="code-container">
+<pre><code><span class="token comment"># text_rewriting_example.py</span>
+<span class="token keyword">from</span> litellm <span class="token keyword">import</span> completion
+
+<span class="token keyword">def</span> <span class="token function">rewrite_text</span>(original_text, style):
+    style_prompts = {
+        <span class="token string">"professional"</span>: <span class="token string">"formal, business-appropriate..."</span>,
+        <span class="token string">"casual"</span>: <span class="token string">"friendly, conversational tone..."</span>,
+        <span class="token string">"academic"</span>: <span class="token string">"scholarly tone, precise terminology..."</span>,
+        <span class="token string">"marketing"</span>: <span class="token string">"persuasive, engaging language..."</span>,
+        <span class="token string">"technical"</span>: <span class="token string">"clear, precise technical writing..."</span>,
+        <span class="token string">"creative"</span>: <span class="token string">"imaginative, expressive language..."</span>
+    }
+    
+    style_instruction = style_prompts.get(style, <span class="token string">"clear and appropriate"</span>)
+    
+    <span class="token keyword">try</span>:
+        response = completion(
+            model=<span class="token string">"gpt-3.5-turbo"</span>,
+            messages=[
+                {<span class="token string">"role"</span>: <span class="token string">"system"</span>, <span class="token string">"content"</span>: <span class="token string">f"You are an expert... Rewrite using {style_instruction}"</span>},
+                {<span class="token string">"role"</span>: <span class="token string">"user"</span>, <span class="token string">"content"</span>: <span class="token string">f"Rewrite: {original_text}"</span>}
+            ],
+            temperature=<span class="token number">0.7</span>, max_tokens=<span class="token number">200</span>
+        )
+        <span class="token keyword">return</span> response.choices[<span class="token number">0</span>].message.content.strip()
+    <span class="token keyword">except</span> Exception <span class="token keyword">as</span> e:
+        <span class="token keyword">return</span> <span class="token string">f"Rewriting failed: {str(e)}"</span></code></pre>
+        </div>
+      </div>
+      
+      <div class="panel" id="rewriting-results">
+        <h3>Actual Rewriting Results</h3>
+        <div class="results-list">
+            <div class="result-item original">
+                <strong>ORIGINAL TEXT</strong>
+                Our new software helps companies manage their data better. It's fast and easy to use. Many customers like it.
+            </div>
+            <div class="result-item professional">
+                <strong>PROFESSIONAL STYLE</strong>
+                Our innovative software solution enables organizations to optimize their data management processes with enhanced efficiency. The platform delivers superior performance while maintaining exceptional user accessibility, earning widespread approval from our clientele.
+            </div>
+            <div class="result-item casual">
+                <strong>CASUAL STYLE</strong>
+                We've got this awesome new software that makes handling your company's data a breeze! It's super quick and really user-friendly - our customers absolutely love it!
+            </div>
+            <div class="result-item academic">
+                <strong>ACADEMIC STYLE</strong>
+                The newly developed software application facilitates enhanced data management capabilities for corporate entities. The system demonstrates high-performance characteristics and intuitive usability, resulting in positive user satisfaction metrics.
+            </div>
+            <div class="result-item marketing">
+                <strong>MARKETING STYLE</strong>
+                Revolutionize your data management with our game-changing software! Experience lightning-fast performance and effortless usability that your team will love. Join thousands of satisfied customers!
+            </div>
+        </div>
+      </div>
+
+      <div class="panel" id="advanced-features">
+        <h3>Advanced Rewriting Features</h3>
+        <div class="code-container">
+<pre><code><span class="token keyword">def</span> <span class="token function">advanced_rewrite</span>(text, requirements):
+    prompt = <span class="token string">f"""Rewrite the text according to these requirements:
+    {requirements}
+    Original text: {text}"""</span>
+    
+    response = completion(
+        model=<span class="token string">"gpt-4"</span>,
+        messages=[
+            {<span class="token string">"role"</span>: <span class="token string">"system"</span>, <span class="token string">"content"</span>: <span class="token string">"You are a professional content editor..."</span>},
+            {<span class="token string">"role"</span>: <span class="token string">"user"</span>, <span class="token string">"content"</span>: prompt}
+        ],
+        temperature=<span class="token number">0.5</span>
+    )
+    <span class="token keyword">return</span> response.choices[<span class="token number">0</span>].message.content</code></pre>
+        </div>
+        <p class="customized-rewrite">
+            <strong>Customized Rewrite:</strong> Simplify your data management with our fast, user-friendly software. Boost your small business's efficiency today. Try it now!
+        </p>
+      </div>
+
+      <div class="panel" id="applications">
+        <h3>Practical Applications</h3>
+        <ul>
+            <li><span>✍️</span> <div><strong>Email Adaptation:</strong> Transform formal emails into casual replies or vice versa to match recipient tone.</div></li>
+            <li><span>📈</span> <div><strong>Marketing Copy:</strong> Convert dry technical features into persuasive, benefit-driven promotional content.</div></li>
+            <li><span>📄</span> <div><strong>Content Simplification:</strong> Adapt complex academic or technical papers for broader, non-expert audiences.</div></li>
+            <li><span>📱</span> <div><strong>Social Media Posts:</strong> Condense long-form articles or reports into engaging, platform-specific updates.</div></li>
+            <li><span>📘</span> <div><strong>User Documentation:</strong> Rewrite technical developer docs into clear, user-friendly guides for end-users.</div></li>
+        </ul>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

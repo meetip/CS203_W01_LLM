@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide 45: Chain-of-Thought Implementation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      font-family: 'Poppins', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: auto;
+    }
+
+    .slide {
+      width: 1280px; 
+      background: radial-gradient(circle, #1a2a4f, #0d1b3e);
+      color: #E0E0E0;
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      flex-shrink: 0;
+    }
+
+    .header h1 {
+      font-size: 44px;
+      margin: 0;
+      color: #FFFFFF;
+      letter-spacing: 1px;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(46, 125, 255, 0.5);
+    }
+
+    .header p {
+      font-size: 20px;
+      color: #A0B3D0;
+      margin-top: 8px;
+      font-weight: 300;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: 24px;
+      flex-grow: 1;
+      height: calc(100% - 150px);
+    }
+
+    .panel {
+      background: rgba(13, 27, 62, 0.6);
+      border: 1px solid #2A3B5F;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column; 
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .panel:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(46, 125, 255, 0.2);
+    }
+
+    .panel h3 {
+      font-size: 18px;
+      color: #A0B3D0;
+      margin: 0 0 16px 0;
+      border-bottom: 1px solid #2A3B5F;
+      padding-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    .panel p, .panel li {
+        font-size: 15px;
+        line-height: 1.6;
+        font-weight: 300;
+    }
+
+    .reasoning-step {
+      background-color: #2E7DFF;
+      color: #FFFFFF;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+    .reasoning-step:hover {
+        background-color: #1E6ADD;
+    }
+
+    #code-panel pre {
+      background: #0A1428;
+      border-radius: 8px;
+      padding: 12px;
+      flex-grow: 1; 
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    #code-panel code {
+      font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
+      font-size: 12.5px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      color: #C8D6F2;
+    }
+    
+    .split-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 100%;
+    }
+
+    .panel ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .panel ul li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .panel ul li::before {
+      content: '✓';
+      color: #34D399;
+      margin-right: 12px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      flex-shrink: 0;
+      font-size: 16px;
+      color: #A0B3D0;
+      font-weight: 400;
+    }
+    
+    .footer span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <h1>Chain-of-Thought Implementation</h1>
+      <p>Teaching LLMs to Think Step-by-Step</p>
+    </div>
+
+    <div class="main-content">
+      <!-- Problem Example Panel -->
+      <div class="panel">
+        <h3>Problem Example</h3>
+        <p>A restaurant sold 42 pizzas on Monday, 38 on Tuesday, and 51 on Wednesday. If each pizza costs $18, what was the total revenue for these three days?</p>
+      </div>
+
+      <!-- Reasoning Steps Visualization Panel -->
+      <div class="panel">
+        <h3>Reasoning Steps Visualization</h3>
+        <div class="reasoning-step">Step 1: 42 + 38 + 51 = 131 total pizzas</div>
+        <div class="reasoning-step">Step 2: 131 × $18 = $2,358 total revenue</div>
+      </div>
+
+      <!-- Chain-of-Thought Prompt Panel -->
+      <div class="panel" id="code-panel">
+        <h3>Chain-of-Thought Prompt</h3>
+        <pre><code>def solve_with_reasoning(problem):
+    prompt = f"""Solve this step-by-step. Show your reasoning:
+    
+    Problem: {problem}
+    
+    Step 1: Identify what we know
+    Step 2: Determine what we need to find
+    Step 3: Plan the solution approach
+    Step 4: Execute calculations
+    Step 5: Verify the answer
+    
+    Let's work through this:"""
+    
+    response = litellm.completion(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.2
+    )
+    return response.choices[0].message.content</code></pre>
+      </div>
+
+      <!-- Practice & Benefits Panel -->
+      <div class="panel">
+        <div class="split-panel">
+            <div>
+                <h3>Practice Problems</h3>
+                <ul>
+                    <li>Logic puzzles</li>
+                    <li>Multi-step math problems</li>
+                    <li>Causal analysis tasks</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Benefits</h3>
+                <ul>
+                    <li>Improved accuracy on complex tasks</li>
+                    <li>Transparent and auditable reasoning</li>
+                    <li>Better general problem-solving ability</li>
+                </ul>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>⏱️ 20-25 minutes</span>
+      <span>Lab Step 12/17</span>
+      <span>🧠 Logical Reasoning</span>
+    </div>
+  </div>
+</body>
+</html>

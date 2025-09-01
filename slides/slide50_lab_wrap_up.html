@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide 50: Lab Wrap-up & Next Steps</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #111;
+            font-family: 'Roboto', sans-serif, 'Microsoft YaHei';
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background-color: #0a192f;
+            color: #e6f1ff;
+            display: flex;
+            flex-direction: column;
+            position: relative; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/university_computer_science_students_modern_classroom_laptops.jpg') no-repeat center center / cover;
+            opacity: 0.08;
+            z-index: 1;
+        }
+
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/ai_technology_network_innovation_applications.jpg') no-repeat right bottom / 50%;
+            opacity: 0.15;
+            z-index: 2;
+        }
+
+        .header, .main-content, .preview, .footer {
+            position: relative;
+            z-index: 3;
+            padding: 0 60px;
+        }
+
+        .header {
+            padding-top: 40px;
+            text-align: center;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 900;
+            margin: 0;
+            color: #64ffda;
+            text-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: 400;
+            margin: 10px 0 0;
+            color: #ccd6f6;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding-top: 30px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .column:nth-child(1) { animation: fadeInLeft 1s ease-out 0.2s; animation-fill-mode: both; }
+        .column:nth-child(2) { animation: fadeInRight 1s ease-out 0.4s; animation-fill-mode: both; }
+
+        .column h3 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #a8b2d1;
+            border-bottom: 2px solid #304a6e;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .column li {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #ccd6f6;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .column li::before {
+            margin-right: 15px;
+            font-size: 20px;
+            line-height: 1.4;
+        }
+        
+        .accomplishments li::before {
+            content: '✅';
+            color: #64ffda;
+        }
+
+        .next-steps-list li::before {
+            font-family: 'Roboto', sans-serif;
+            font-weight: normal;
+        }
+        .next-steps-list .hw::before { content: '📁'; }
+        .next-steps-list .learn::before { content: '📚'; }
+        .next-steps-list .ideas::before { content: '🎨'; }
+        .next-steps-list .community::before { content: '🔗'; }
+        
+        .skills-mastered ul li {
+            background-color: rgba(48, 74, 110, 0.3);
+            padding: 8px 12px;
+            border-radius: 5px;
+            border-left: 3px solid #64ffda;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .preview {
+            background-color: rgba(100, 255, 218, 0.1);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 8px;
+            padding: 15px 30px;
+            margin: 20px 60px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 500;
+            color: #e6f1ff;
+            animation: fadeInUp 1s ease-out 0.6s;
+            animation-fill-mode: both;
+        }
+        
+        .preview strong {
+            color: #64ffda;
+            font-weight: 700;
+        }
+
+        .footer {
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 400;
+            color: #a8b2d1;
+            border-top: 1px solid #304a6e;
+        }
+
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <header class="header">
+            <h1>Lab Wrap-up & Next Steps</h1>
+            <h2>Congratulations on Your LLM Development Journey! 🎉</h2>
+        </header>
+
+        <main class="main-content">
+            <div class="column">
+                <h3>What You've Accomplished</h3>
+                <ul class="accomplishments">
+                    <li><strong>Environment Setup:</strong> Python, LiteLLM, API configuration</li>
+                    <li><strong>Basic Operations:</strong> Text completion, summarization, translation, rewriting</li>
+                    <li><strong>Advanced Techniques:</strong> Role prompting, chain-of-thought, parameter tuning</li>
+                    <li><strong>Production Skills:</strong> Error handling, best practices, robust applications</li>
+                    <li><strong>Creative Project:</strong> Built your own AI assistant</li>
+                </ul>
+            </div>
+            <div class="column">
+                <div class="skills-mastered">
+                    <h3>Skills Mastered</h3>
+                    <ul>
+                        <li>Prompt engineering fundamentals</li>
+                        <li>API integration and management</li>
+                        <li>Error handling and debugging</li>
+                        <li>Production-ready development practices</li>
+                    </ul>
+                </div>
+                <div class="next-steps" style="margin-top: 25px;">
+                    <h3>Next Steps & Resources</h3>
+                    <ul class="next-steps-list">
+                        <li class="hw"><strong>Homework Assignment:</strong> Extend your AI assistant with new features</li>
+                        <li class="learn"><strong>Additional Learning:</strong> Advanced prompt patterns, fine-tuning, RAG systems</li>
+                        <li class="ideas"><strong>Project Ideas:</strong> Chatbots, content generators, automation tools</li>
+                        <li class="community"><strong>Community:</strong> Join LLM dev communities, contribute to open source</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <div class="preview">
+            <strong>Preview Next Week:</strong> Advanced LLM Applications: RAG, Function Calling & Multi-Agent Systems
+        </div>
+
+        <footer class="footer">
+            <span>⏱️ 2 Hours Complete</span>
+            <span>Lab Step 17/17</span>
+            <span>🎆 Journey Complete!</span>
+        </footer>
+    </div>
+</body>
+</html>

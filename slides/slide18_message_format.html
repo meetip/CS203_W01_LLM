@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Format & Conversation Roles</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 1280px;
+      height: 720px;
+      background-color: #1A1D24;
+      font-family: 'Inter', sans-serif;
+      color: #EAECEF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      padding: 40px 50px;
+      overflow: auto;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      gap: 20px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .header h1 {
+      font-size: 44px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -1px;
+    }
+
+    .header h2 {
+      font-size: 22px;
+      font-weight: 400;
+      color: #9FA6B2;
+      margin: 5px 0 0 0;
+    }
+
+    /* Roles Section */
+    .roles-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .role-card {
+      background-color: #282C34;
+      border-radius: 12px;
+      padding: 20px;
+      flex: 1;
+      border-left: 5px solid;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+    .role-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .role-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .role-card ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #B0B8C5;
+    }
+    
+    .role-card li span {
+      font-weight: 600;
+      color: #EAECEF;
+    }
+
+    .role-card .example {
+      font-size: 13px;
+      font-style: italic;
+      color: #9FA6B2;
+      background-color: #333842;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: auto; /* Pushes example to the bottom */
+      border-left: 3px solid #6c757d;
+    }
+
+    .system-card { border-color: #4A90E2; }
+    .user-card { border-color: #50E3C2; }
+    .assistant-card { border-color: #F5A623; }
+
+    /* Main Content Area */
+    .main-content {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 30px;
+      flex-grow: 1; 
+    }
+
+    /* Code Example */
+    .code-example-container {
+      background-color: #282C34;
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'SF Mono', 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-y: auto;
+      white-space: pre;
+    }
+    .code-example-container .key { color: #61AFEF; }
+    .code-example-container .string { color: #98C379; }
+    .code-example-container .punct { color: #ABB2BF; }
+
+    /* Tips Section */
+    .tips-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 18px;
+    }
+    
+    .tip-section h4 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tip-section ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #B0B8C5;
+    }
+
+    .tip-section ul li {
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .tip-section ul li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: #61AFEF;
+      font-weight: bold;
+    }
+
+    .expert-tips {
+      margin-top: auto;
+      background: linear-gradient(to right, rgba(245, 166, 35, 0.1), rgba(245, 166, 35, 0.05));
+      border: 1px solid rgba(245, 166, 35, 0.5);
+      border-radius: 10px;
+      padding: 15px;
+    }
+     .expert-tips h4 {
+        color: #F5A623;
+     }
+     .expert-tips ul li::before {
+        color: #F5A623;
+     }
+
+  </style>
+</head>
+<body>
+
+  <div class="slide">
+    <header class="header">
+      <h1>Message Format & Conversation Roles</h1>
+      <h2>Building Effective Conversations with LLMs</h2>
+    </header>
+
+    <section class="roles-container">
+      <div class="role-card system-card">
+        <h3>🤖 System Messages</h3>
+        <ul>
+          <li><span>Purpose:</span> Set context, behavior, and instructions for the AI.</li>
+          <li><span>Position:</span> Typically first in the conversation.</li>
+          <li><span>Content:</span> Instructions, persona, guidelines, constraints.</li>
+        </ul>
+        <p class="example">"You are a helpful programming tutor. Explain concepts clearly and provide code examples."</p>
+      </div>
+      <div class="role-card user-card">
+        <h3>👤 User Messages</h3>
+        <ul>
+          <li><span>Purpose:</span> User input, questions, and requests.</li>
+          <li><span>Position:</span> Throughout the conversation.</li>
+          <li><span>Content:</span> Queries, prompts, follow-up questions.</li>
+        </ul>
+        <p class="example">"How do I create a Python function that calculates the factorial?"</p>
+      </div>
+      <div class="role-card assistant-card">
+        <h3>🤖 Assistant Messages</h3>
+        <ul>
+          <li><span>Purpose:</span> AI responses and generated content.</li>
+          <li><span>Position:</span> Following user messages.</li>
+          <li><span>Content:</span> Answers, explanations, generated text.</li>
+        </ul>
+        <p class="example">"Here's a Python function to calculate factorial: def factorial(n): ..."</p>
+      </div>
+    </section>
+
+    <main class="main-content">
+      <div class="code-example-container">
+[
+  <span class="punct">{</span>
+    <span class="key">"role"</span>: <span class="string">"system"</span><span class="punct">,</span>
+    <span class="key">"content"</span>: <span class="string">"You are a helpful coding assistant specializing in Python."</span>
+  <span class="punct">}</span>,
+  <span class="punct">{</span>
+    <span class="key">"role"</span>: <span class="string">"user"</span><span class="punct">,</span>
+    <span class="key">"content"</span>: <span class="string">"I need help with loops in Python."</span>
+  <span class="punct">}</span>,
+  <span class="punct">{</span>
+    <span class="key">"role"</span>: <span class="string">"assistant"</span><span class="punct">,</span>
+    <span class="key">"content"</span>: <span class="string">"I'd be happy to help! Python has two main types of loops: for and while loops..."</span>
+  <span class="punct">}</span>,
+  <span class="punct">{</span>
+    <span class="key">"role"</span>: <span class="string">"user"</span><span class="punct">,</span>
+    <span class="key">"content"</span>: <span class="string">"Can you show me a for loop example?"</span>
+  <span class="punct">}</span>
+]
+      </div>
+      <div class="tips-container">
+        <div class="tip-section">
+          <h4>📝 System Message Tips</h4>
+          <ul>
+            <li>Be specific about desired behavior and output format.</li>
+            <li>Include relevant context and constraints.</li>
+            <li>Set the tone and expertise level.</li>
+            <li>Keep it concise but comprehensive for clarity.</li>
+          </ul>
+        </div>
+        <div class="tip-section">
+            <h4>💬 Conversation Management</h4>
+            <ul>
+              <li>Include relevant conversation history for context.</li>
+              <li>Manage context window limits effectively.</li>
+              <li>Use assistant messages to maintain conversational flow.</li>
+              <li>Implement summarization for long chats.</li>
+            </ul>
+          </div>
+        <div class="tip-section expert-tips">
+          <h4>✨ Expert Tips</h4>
+          <ul>
+            <li>System messages are more influential than user instructions.</li>
+            <li>Include examples in system messages for better results.</li>
+            <li>Test different system message variations for optimal results.</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

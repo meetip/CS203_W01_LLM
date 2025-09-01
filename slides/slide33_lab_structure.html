@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab Structure & Expectations</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@400;500&display=swap');
+
+    :root {
+      --bg-color: #F8F9FA;
+      --text-dark: #212529;
+      --text-medium: #495057;
+      --text-light: #6C757D;
+      --primary-color: #007BFF;
+      --secondary-color: #6c757d;
+      --accent-color: #17A2B8;
+      --card-bg: #FFFFFF;
+      --border-color: #DEE2E6;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --tag-foundational: #28a745;
+      --tag-core: #ffc107;
+      --tag-advanced: #dc3545;
+      --tag-production: #17a2b8;
+    }
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #e9ecef;
+      font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      padding: 30px 40px;
+      box-sizing: border-box;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      overflow: auto;
+      position: relative;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .header h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 38px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    .header h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--primary-color);
+      margin: 5px 0 0 0;
+    }
+
+    .parts-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      flex-grow: 1;
+      margin-bottom: 20px;
+    }
+
+    .part-card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .part-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+    
+    .part-card:nth-child(1) { animation-delay: 0.2s; opacity: 0; }
+    .part-card:nth-child(2) { animation-delay: 0.3s; opacity: 0; }
+    .part-card:nth-child(3) { animation-delay: 0.4s; opacity: 0; }
+    .part-card:nth-child(4) { animation-delay: 0.5s; opacity: 0; }
+
+    .part-header {
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+
+    .part-header h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin: 0;
+    }
+    
+    .part-tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 12px;
+        color: white;
+        margin-top: 5px;
+    }
+    
+    #tag1 { background-color: var(--tag-foundational); }
+    #tag2 { background-color: var(--tag-core); color: var(--text-dark); }
+    #tag3 { background-color: var(--tag-advanced); }
+    #tag4 { background-color: var(--tag-production); }
+
+    .part-content h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin: 10px 0 5px 0;
+    }
+
+    .part-content ul {
+      list-style-position: outside;
+      padding-left: 18px;
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-medium);
+    }
+
+    .part-content ul li {
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .deliverable {
+      margin-top: auto;
+      padding-top: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent-color);
+      border-top: 1px dashed var(--border-color);
+      text-align: center;
+    }
+    
+    .deliverable strong {
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-dark);
+    }
+
+    .bottom-section {
+      display: flex;
+      gap: 20px;
+      animation: fadeIn 0.5s ease-out 0.6s forwards;
+      opacity: 0;
+    }
+
+    .assessment-container {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .info-column {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      border: 1px solid var(--border-color);
+    }
+
+    .info-column h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin: 0 0 8px 0;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 5px;
+    }
+
+    .info-column ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .info-column li {
+      font-size: 12.5px;
+      color: var(--text-medium);
+      line-height: 1.5;
+      margin-bottom: 5px;
+    }
+
+    .tips-box {
+      width: 280px;
+      background: linear-gradient(135deg, #e6f7ff, #e0f2ff);
+      border-radius: 8px;
+      padding: 12px;
+      border: 1px solid #b3e0ff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tips-box h4 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #004085;
+      margin: 0 0 8px 0;
+    }
+    
+    .tips-box ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .tips-box li {
+      font-size: 12.5px;
+      color: #0056b3;
+      line-height: 1.5;
+      margin-bottom: 5px;
+    }
+    
+    .tips-box li::before {
+        content: '•';
+        color: #007BFF;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="header">
+      <h1>Detailed Lab Structure & Student Expectations</h1>
+      <h2>Your Roadmap to LLM Programming Success</h2>
+    </div>
+
+    <div class="parts-grid">
+      <!-- Part 1 -->
+      <div class="part-card">
+        <div class="part-header">
+          <h3>Part 1: Env. Setup (20 min)</h3>
+          <span class="part-tag" id="tag1">Foundational</span>
+        </div>
+        <div class="part-content">
+          <h4>Objectives:</h4>
+          <ul>
+            <li>Verify Python & env</li>
+            <li>Install LiteLLM package</li>
+            <li>Configure API keys securely</li>
+            <li>Execute 1st successful API call</li>
+          </ul>
+          <h4>Key Activities:</h4>
+          <ul>
+            <li>Step-by-step installation</li>
+            <li>API key config & security</li>
+            <li>"Hello World" API test</li>
+            <li>Resolve common issues</li>
+          </ul>
+        </div>
+        <div class="deliverable"><strong>Deliverable:</strong> Screenshot of API response</div>
+      </div>
+
+      <!-- Part 2 -->
+      <div class="part-card">
+        <div class="part-header">
+          <h3>Part 2: API Mastery (30 min)</h3>
+          <span class="part-tag" id="tag2">Core Skills</span>
+        </div>
+        <div class="part-content">
+          <h4>Objectives:</h4>
+          <ul>
+            <li>Execute requests with diff. models</li>
+            <li>Implement error handling</li>
+            <li>Explore key parameters</li>
+            <li>Compare provider outputs</li>
+          </ul>
+          <h4>Key Activities:</h4>
+          <ul>
+            <li>Model comparison exercises</li>
+            <li>Parameter experiments</li>
+            <li>Error handling simulation</li>
+            <li>Token usage & cost tracking</li>
+          </ul>
+        </div>
+        <div class="deliverable"><strong>Deliverable:</strong> Python script with error handling</div>
+      </div>
+
+      <!-- Part 3 -->
+      <div class="part-card">
+        <div class="part-header">
+          <h3>Part 3: Prompting (40 min)</h3>
+          <span class="part-tag" id="tag3">Advanced Techniques</span>
+        </div>
+        <div class="part-content">
+          <h4>Objectives:</h4>
+          <ul>
+            <li>Master zero-shot prompting</li>
+            <li>Implement few-shot learning</li>
+            <li>Practice chain-of-thought</li>
+            <li>Design effective system messages</li>
+          </ul>
+          <h4>Key Activities:</h4>
+          <ul>
+            <li>Prompt optimization challenges</li>
+            <li>Task-specific prompting</li>
+            <li>A/B test prompt effectiveness</li>
+            <li>Creative applications</li>
+          </ul>
+        </div>
+        <div class="deliverable"><strong>Deliverable:</strong> Portfolio of optimized prompts</div>
+      </div>
+
+      <!-- Part 4 -->
+      <div class="part-card">
+        <div class="part-header">
+          <h3>Part 4: Applications (30 min)</h3>
+          <span class="part-tag" id="tag4">Production Ready</span>
+        </div>
+        <div class="part-content">
+          <h4>Objectives:</h4>
+          <ul>
+            <li>Build robust applications</li>
+            <li>Manage context windows</li>
+            <li>Apply cost optimization</li>
+            <li>Create user-friendly interfaces</li>
+          </ul>
+          <h4>Key Activities:</h4>
+          <ul>
+            <li>Mini-project development</li>
+            <li>Performance optimization</li>
+            <li>User experience design</li>
+            <li>Deployment preparation</li>
+          </ul>
+        </div>
+        <div class="deliverable"><strong>Deliverable:</strong> Complete application with docs</div>
+      </div>
+    </div>
+
+    <div class="bottom-section">
+      <div class="assessment-container">
+        <div class="info-column">
+          <h4>🏆 Success Metrics</h4>
+          <ul>
+            <li><strong>Participation:</strong> Active engagement in exercises</li>
+            <li><strong>Completion:</strong> Finish all four lab parts</li>
+            <li><strong>Quality:</strong> Working, well-structured code</li>
+            <li><strong>Creativity:</strong> Innovative use of techniques</li>
+          </ul>
+        </div>
+        <div class="info-column">
+          <h4>🤝 Collaboration Policy</h4>
+          <ul>
+            <li><strong>Encouraged:</strong> Help peers with tech issues</li>
+            <li><strong>Share Insights:</strong> Discuss prompt strategies</li>
+            <li><strong>Peer Learning:</strong> Form groups for challenges</li>
+            <li><strong>Individual Work:</strong> Submit your own deliverables</li>
+          </ul>
+        </div>
+        <div class="info-column">
+          <h4>🔄 Continuous Support</h4>
+          <ul>
+            <li><strong>Instructor:</strong> Assistance throughout session</li>
+            <li><strong>TA Support:</strong> For troubleshooting & guidance</li>
+            <li><strong>Resources:</strong> Curated docs and tutorials</li>
+            <li><strong>Office Hours:</strong> Post-lab extended help</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tips-box">
+        <h4>🎆 Tips for Success</h4>
+        <ul>
+          <li>Start early on setup issues</li>
+          <li>Experiment freely with models</li>
+          <li>Document your findings</li>
+          <li>Ask lots of questions</li>
+          <li>Have fun exploring LLMs!</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

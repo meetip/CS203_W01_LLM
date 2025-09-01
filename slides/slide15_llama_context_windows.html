@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLaMA Family Context Windows</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      padding: 40px 50px;
+      box-sizing: border-box;
+      position: relative;
+      overflow: auto;
+    }
+
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      width: 80px;
+      height: 80px;
+      background-color: #e7f3ff;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    header {
+      text-align: left;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header h1 {
+      font-size: 38px;
+      color: #1c1e21;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    header h2 {
+      font-size: 20px;
+      color: #5f6368;
+      margin: 5px 0 0 0;
+      font-weight: 400;
+    }
+
+    .content-grid {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      gap: 18px;
+    }
+
+    .row {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .card {
+      border-radius: 12px;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row-1 .card { flex: 1; }
+    .row-2 .card { flex: 1; }
+    .row-3 .card { flex: 1; }
+    
+    .card.light-blue {
+      background-color: #e7f3ff;
+      border: 1px solid #d0e7ff;
+    }
+
+    .card.dark-blue {
+      background-color: #1a2b42;
+      color: #ffffff;
+    }
+
+    .card.gray {
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+    }
+    
+    .card h3 {
+      font-size: 20px;
+      margin: 0 0 15px 0;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+    }
+    
+    .dark-blue h3 {
+        color: #e0f0ff;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+    
+    .card ul li {
+        margin-bottom: 8px;
+    }
+    
+    .card ul li:last-child {
+        margin-bottom: 0;
+    }
+
+    .card ul li strong {
+      font-weight: 500;
+      color: #0d1a26;
+    }
+    
+    .dark-blue ul li strong {
+        color: #a7c8ff;
+    }
+    
+    .icon {
+        font-size: 22px;
+        margin-right: 10px;
+    }
+    
+    .bottom-row-card {
+        padding: 15px 20px;
+    }
+    
+    .bottom-row-card h3 {
+        font-size: 17px;
+        color: #0056b3;
+        margin-bottom: 10px;
+    }
+    
+    .bottom-row-card ul {
+        font-size: 14px;
+        line-height: 1.5;
+        padding-left: 18px;
+    }
+
+    .bottom-row-card.research-focus h3 {
+        color: #1c1e21;
+    }
+
+    .bottom-row-card.research-focus p {
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0;
+        color: #495057;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <header>
+      <h1>LLaMA Family Context Windows</h1>
+      <h2>Meta's Research-Driven Open Models</h2>
+    </header>
+
+    <div class="content-grid">
+      <!-- Top Row -->
+      <div class="row row-1">
+        <div class="card light-blue">
+          <h3>LLaMA 2 (7B, 13B, 70B)</h3>
+          <ul>
+            <li><strong>Context Window:</strong> 4,096 tokens (~3,000 words)</li>
+            <li><strong>License:</strong> Custom license (commercial use allowed)</li>
+            <li><strong>Strengths:</strong> Strong foundational capabilities, efficient training</li>
+            <li><strong>Best For:</strong> Research, fine-tuning experiments, educational use</li>
+            <li><strong>Community:</strong> Large open-source ecosystem</li>
+            <li><strong>Deployment:</strong> Requires local hosting or cloud deployment</li>
+          </ul>
+        </div>
+        <div class="card dark-blue">
+          <h3>Code Llama (7B, 13B, 34B)</h3>
+          <ul>
+            <li><strong>Context Window:</strong> 16,384 tokens (~12,000 words)</li>
+            <li><strong>Specialization:</strong> Code generation, completion, and debugging</li>
+            <li><strong>Languages:</strong> Python, C++, Java, PHP, TypeScript, C#, Bash</li>
+            <li><strong>Best For:</strong> Software development, code analysis, programming education</li>
+            <li><strong>Training:</strong> Specialized on 500B tokens of code</li>
+            <li><strong>Performance:</strong> Competitive with GitHub Copilot</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Middle Row -->
+      <div class="row row-2">
+        <div class="card gray">
+          <h3><span class="icon">🔧</span>Research Innovations</h3>
+          <ul>
+            <li><strong>RoPE (Rotary Position Embedding):</strong> Enables context extension</li>
+            <li><strong>YaRN:</strong> Yet another RoPE extensioN technique</li>
+            <li><strong>LongLLaMA:</strong> Community extensions to 256K+ tokens</li>
+            <li><strong>Code-specific optimizations:</strong> Tailored for programming contexts</li>
+          </ul>
+        </div>
+        <div class="card gray">
+          <h3><span class="icon">🔍</span>Fine-tuning Capabilities</h3>
+          <ul>
+            <li><strong>LoRA (Low-Rank Adaptation):</strong> Efficient parameter updates</li>
+            <li><strong>QLoRA:</strong> Quantized fine-tuning for consumer hardware</li>
+            <li><strong>Instruction tuning:</strong> Alpaca, Vicuna, and other derivatives</li>
+            <li><strong>Domain specialization:</strong> Medical, legal, scientific variants</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Row -->
+      <div class="row row-3">
+        <div class="card gray bottom-row-card">
+          <h3>4K Context (LLaMA 2) Applications</h3>
+          <ul>
+            <li>Research experiments & model comparison</li>
+            <li>Fine-tuning base models for specific tasks</li>
+            <li>Educational projects and learning</li>
+            <li>Efficient inference for simple tasks</li>
+          </ul>
+        </div>
+        <div class="card gray bottom-row-card">
+          <h3>16K Context (Code Llama) Applications</h3>
+          <ul>
+            <li>Complete function and class analysis</li>
+            <li>Multi-file code understanding & generation</li>
+            <li>Documentation and docstring creation</li>
+            <li>Code refactoring and optimization</li>
+          </ul>
+        </div>
+        <div class="card gray bottom-row-card research-focus">
+          <h3><span class="icon">🔬</span>Research & Community Focus</h3>
+          <p>LLaMA models serve as a foundation for hundreds of research projects, fine-tuned variants, and community experiments, encouraging efficient prompt design and specialized fine-tuning approaches.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

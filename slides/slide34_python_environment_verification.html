@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide 34: Python Environment Verification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #0c102a;
+      --card-bg: rgba(26, 35, 126, 0.45);
+      --border-color: rgba(33, 150, 243, 0.3);
+      --primary-accent: #2196f3;
+      --text-primary: #ffffff;
+      --text-secondary: #bbdefb;
+      --text-tertiary: #e0e0e0;
+      --font-body: 'Poppins', sans-serif;
+      --font-code: 'Fira Code', monospace;
+      --green-accent: #4CAF50;
+      --yellow-accent: #FFC107;
+      --code-bg: #0D1117;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    body {
+      width: 1280px;
+      height: 720px;
+      background: radial-gradient(circle at 100% 0%, rgba(33, 150, 243, 0.15), transparent 40%), var(--bg-color);
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      box-sizing: border-box;
+    }
+
+    .slide {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 40px 50px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    header {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    header h1 {
+      font-size: 46px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+      color: var(--text-primary);
+    }
+
+    header p {
+      font-size: 19px;
+      color: var(--text-secondary);
+      margin: 0 0 25px 0;
+      font-weight: 400;
+    }
+
+    .content-grid {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      gap: 28px; 
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(3px);
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 500;
+      margin: 0 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-primary);
+    }
+    
+    /* Checklist card specific styles */
+    .card.checklist {
+      grid-row: 1 / 3;
+      animation-delay: 0.1s;
+    }
+    
+    .checklist-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        background-color: var(--green-accent);
+        border-radius: 4px;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .checklist-items {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text-tertiary);
+    }
+
+    .checklist-item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      min-width: 20px;
+      height: 20px;
+      background-color: rgba(0,0,0,0.2);
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      top: 2px;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .checklist-item input[type="checkbox"]:checked {
+      background-color: var(--green-accent);
+      border-color: var(--green-accent);
+    }
+
+    .checklist-item input[type="checkbox"]:checked::after {
+      content: '✔';
+      color: white;
+      font-size: 14px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .checklist-item .command {
+      font-family: var(--font-code);
+      background-color: rgba(0,0,0,0.3);
+      padding: 3px 6px;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-size: 14px;
+    }
+
+    /* Right column cards */
+    .card.output {
+        animation-delay: 0.2s;
+    }
+    .card.troubleshooting {
+        animation-delay: 0.3s;
+    }
+
+    .icon-lightbulb { color: var(--yellow-accent); font-size: 24px; }
+    .icon-wrench { color: var(--primary-accent); font-size: 24px; }
+    
+    .code-block {
+      background-color: var(--code-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 12px 15px;
+      font-family: var(--font-code);
+      font-size: 14px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      line-height: 1.5;
+    }
+    
+    .output .code-block:not(:last-child) {
+        margin-bottom: 16px;
+    }
+
+    .code-block .prompt { color: #88ddff; }
+    .code-block .path { color: #ce93d8; }
+
+    .troubleshooting-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .troubleshooting-list li {
+      font-size: 14px;
+      line-height: 1.6;
+      padding-left: 22px;
+      position: relative;
+      color: var(--text-tertiary);
+    }
+    .troubleshooting-list li::before {
+      content: '•';
+      color: var(--primary-accent);
+      font-weight: bold;
+      font-size: 20px;
+      position: absolute;
+      left: 0;
+      top: -2px;
+    }
+
+    .footer {
+      position: relative;
+      bottom: 15px;
+      left: 50px;
+      right: 50px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: var(--text-secondary);
+      opacity: 0.8;
+      animation: fadeIn 0.5s ease-out 0.4s forwards;
+      animation-fill-mode: backwards;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <header>
+      <h1>Python Environment Verification</h1>
+      <p>Step 1: Confirm Your Development Environment</p>
+    </header>
+
+    <main class="content-grid">
+      <div class="card checklist">
+        <h2 class="card-title">
+          <span class="checklist-icon">✔</span>
+          Verification Checklist
+        </h2>
+        <div class="checklist-items">
+          <div class="checklist-item">
+            <input type="checkbox" checked>
+            <label>Check Python version: <code class="command">python --version</code></label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox">
+            <label>Get system details: <code class="command">python -c "import sys; print(sys.version)"</code></label>
+          </div>
+          <div class="checklist-item">
+            <input type="checkbox">
+            <label>Verify executable path: <code class="command">which python</code> (Unix) / <code class="command">where python</code> (Windows)</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card output">
+        <h2 class="card-title">
+          <span class="icon-lightbulb">💡</span>
+          Expected Output Examples
+        </h2>
+        <div class="code-block">
+          <span class="prompt">$</span> python --version<br>
+          Python 3.10.4
+        </div>
+        <div class="code-block">
+          <span class="prompt">$</span> where python<br>
+          <span class="path">C:\Users\YourUser\AppData\Local\Programs\Python\Python310\python.exe</span>
+        </div>
+      </div>
+
+      <div class="card troubleshooting">
+        <h2 class="card-title">
+          <span class="icon-wrench">🔧</span>
+          Troubleshooting
+        </h2>
+        <ul class="troubleshooting-list">
+            <li>'python' not found? Check your system's PATH variable.</li>
+            <li>Wrong version? Ensure correct Python installation is first in PATH.</li>
+            <li>Using an environment manager (like conda or venv)? Make sure it's activated.</li>
+        </ul>
+      </div>
+    </main>
+
+    <footer class="footer">
+        <span>⏱️ Est. Time: 5-10 minutes</span>
+        <span>Lab Step 1/17</span>
+    </footer>
+  </div>
+</body>
+</html>

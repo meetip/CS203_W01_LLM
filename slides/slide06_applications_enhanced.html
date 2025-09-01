@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-World LLM Applications</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Poppins', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: #0a192f;
+      position: relative;
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('images/AI-Applications-Real-World-Technology-Innovation.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.15;
+      z-index: 1;
+    }
+    
+    .slide::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(10, 25, 47, 0.85) 0%, rgba(23, 42, 69, 0.9) 100%);
+      z-index: 2;
+    }
+
+    .content-wrapper {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      padding: 40px 60px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 1s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .main-title {
+      font-size: 48px;
+      font-weight: 700;
+      color: #64ffda;
+      text-align: center;
+      margin: 0 0 10px 0;
+      text-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+    }
+
+    .subtitle {
+      font-size: 22px;
+      font-weight: 400;
+      color: #ccd6f6;
+      text-align: center;
+      margin: 0 0 35px 0;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 25px;
+      flex-grow: 1;
+    }
+
+    .grid-item {
+      background-color: rgba(23, 42, 69, 0.6);
+      border: 1px solid rgba(100, 255, 218, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .grid-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      border-color: rgba(100, 255, 218, 0.6);
+    }
+
+    .grid-item h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ccd6f6;
+      margin: 0 0 12px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .grid-item h3 span.icon {
+        font-size: 24px;
+        margin-right: 12px;
+        color: #64ffda;
+    }
+
+    .grid-item ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .grid-item li {
+      font-size: 15px;
+      font-weight: 300;
+      color: #a8b2d1;
+      line-height: 1.5;
+      margin-bottom: 6px;
+      padding-left: 20px;
+      position: relative;
+    }
+    
+    .grid-item li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      top: -1px;
+      color: #64ffda;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .bottom-highlight {
+      margin-top: 30px; 
+      text-align: center;
+      font-size: 18px;
+      font-weight: 400;
+      color: #ccd6f6;
+      background-color: rgba(10, 25, 47, 0.8);
+      border-radius: 5px;
+      border-left: 4px solid #64ffda;
+    }
+
+    .bottom-highlight strong {
+      color: #64ffda;
+      font-weight: 600;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="slide">
+    <div class="content-wrapper">
+      <h1 class="main-title">Real-World LLM Applications</h1>
+      <p class="subtitle">How LLMs Are Transforming Industries</p>
+
+      <div class="grid-container">
+        <div class="grid-item">
+          <h3><span class="icon">💻</span>Software Development</h3>
+          <ul>
+            <li>Code generation and completion</li>
+            <li>Bug detection and fixing</li>
+            <li>Documentation writing</li>
+            <li>Code review and optimization</li>
+          </ul>
+        </div>
+        <div class="grid-item">
+          <h3><span class="icon">🏭</span>Business & Enterprise</h3>
+          <ul>
+            <li>Customer service chatbots</li>
+            <li>Content creation and marketing</li>
+            <li>Data analysis and reporting</li>
+            <li>Email automation and summarization</li>
+          </ul>
+        </div>
+        <div class="grid-item">
+          <h3><span class="icon">📋</span>Content Creation</h3>
+          <ul>
+            <li>Writing assistance and editing</li>
+            <li>Translation and localization</li>
+            <li>Social media content generation</li>
+            <li>Technical documentation</li>
+          </ul>
+        </div>
+        <div class="grid-item">
+          <h3><span class="icon">🗺️</span>Research & Education</h3>
+          <ul>
+            <li>Literature review and synthesis</li>
+            <li>Personalized tutoring systems</li>
+            <li>Research paper assistance</li>
+            <li>Educational content creation</li>
+          </ul>
+        </div>
+        <div class="grid-item">
+          <h3><span class="icon">🔍</span>Data Analysis</h3>
+          <ul>
+            <li>Text mining and sentiment analysis</li>
+            <li>Report generation from data</li>
+            <li>Pattern recognition in documents</li>
+            <li>Automated insights extraction</li>
+          </ul>
+        </div>
+        <div class="grid-item">
+          <h3><span class="icon">🌐</span>Creative Industries</h3>
+          <ul>
+            <li>Screenplay and story writing</li>
+            <li>Game narrative development</li>
+            <li>Marketing copy creation</li>
+            <li>Creative brainstorming assistance</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bottom-highlight">
+        🎯 <strong>Industry Impact:</strong> LLMs are estimated to affect 80% of jobs positively, augmenting human capabilities rather than replacing workers.
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

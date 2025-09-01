@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Context Windows Comparison</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #e0e0e0;
+      font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif, 'Microsoft YaHei';
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: #f7f9fc;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .header {
+      padding: 30px 50px 20px 50px;
+      border-bottom: 1px solid #e0e5eb;
+    }
+
+    .header h1 {
+      font-size: 36px;
+      color: #1e2a3b;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 18px;
+      color: #5c6c80;
+      margin: 5px 0 0 0;
+      font-weight: 400;
+    }
+
+    .table-container {
+      flex-grow: 1;
+      padding: 10px 50px; 
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 11px 12px;
+      vertical-align: middle;
+      border-bottom: 1px solid #e8edf2;
+    }
+
+    th {
+      color: #8492a6;
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      color: #3b4d66;
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .model-family {
+      font-weight: 600;
+      color: #1e2a3b;
+    }
+
+    .model-family-gpt { border-left: 4px solid #75a99c; }
+    .model-family-claude { border-left: 4px solid #a975a8; }
+    .model-family-mistral { border-left: 4px solid #e69a5a; }
+    .model-family-llama { border-left: 4px solid #5a9be6; }
+
+    .model-family.model-family-gpt { color: #5a8e84; }
+    .model-family.model-family-claude { color: #8e5a8d; }
+    .model-family.model-family-mistral { color: #d17d35; }
+    .model-family.model-family-llama { color: #357bd1; }
+
+    .cost-tier {
+      color: #f5b72e;
+      font-size: 16px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .footer {
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      padding: 25px 50px;
+      display: flex;
+      gap: 40px;
+      flex-shrink: 0;
+    }
+
+    .key-insights, .selection-guide-container {
+      flex: 1;
+    }
+    
+    .key-insights {
+        flex-basis: 58%;
+    }
+    .selection-guide-container {
+        flex-basis: 42%;
+    }
+
+    .footer h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-top: 0;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .key-insights ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .key-insights ul li {
+      margin-bottom: 10px;
+      padding-left: 25px;
+      position: relative;
+    }
+    
+    .key-insights ul li:last-child {
+        margin-bottom: 0;
+    }
+
+    .key-insights ul li::before {
+      content: '•';
+      position: absolute;
+      left: 8px;
+      color: #95a5a6;
+    }
+    
+    .key-insights ul li strong {
+        color: #bdc3c7;
+        font-weight: 500;
+    }
+
+    .selection-guide-box {
+      background-color: #34495e;
+      border: 1px solid #4a637e;
+      border-radius: 8px;
+      padding: 20px;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .selection-guide-box ol {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .selection-guide-box ol li {
+      margin-bottom: 8px;
+      display: flex;
+    }
+    
+    .selection-guide-box ol li:last-child {
+        margin-bottom: 0;
+    }
+    
+    .selection-guide-box ol li .num {
+        color: #1abc9c;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+    
+    .selection-guide-box ol li .text span {
+        color: #95a5a6;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <h1>LLM Context Windows: Complete Comparison</h1>
+      <p>Choosing the Right Model for Your Use Case</p>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Model Family</th>
+            <th>Model Name</th>
+            <th>Context Window</th>
+            <th>~Word Count</th>
+            <th style="width: 15%;">Cost Tier</th>
+            <th>Best Use Cases</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="model-family model-family-gpt">GPT (OpenAI)</td>
+            <td>GPT-3.5-Turbo</td>
+            <td>4K tokens</td>
+            <td>~3,000 words</td>
+            <td class="cost-tier">💰 Low</td>
+            <td>Quick queries, chatbots</td>
+          </tr>
+          <tr>
+            <td class="model-family-gpt"></td>
+            <td>GPT-3.5-16K</td>
+            <td>16K tokens</td>
+            <td>~12,000 words</td>
+            <td class="cost-tier">💰💰 Medium</td>
+            <td>Document analysis</td>
+          </tr>
+          <tr>
+            <td class="model-family-gpt"></td>
+            <td>GPT-4</td>
+            <td>8K tokens</td>
+            <td>~6,000 words</td>
+            <td class="cost-tier">💰💰💰 High</td>
+            <td>Complex reasoning</td>
+          </tr>
+          <tr>
+            <td class="model-family-gpt"></td>
+            <td>GPT-4-32K</td>
+            <td>32K tokens</td>
+            <td>~24,000 words</td>
+            <td class="cost-tier">💰💰💰💰 Very High</td>
+            <td>Large documents</td>
+          </tr>
+           <tr>
+            <td class="model-family-gpt"></td>
+            <td>GPT-4-Turbo-128K</td>
+            <td>128K tokens</td>
+            <td>~96,000 words</td>
+            <td class="cost-tier">💰💰💰 High+</td>
+            <td>Massive analysis</td>
+          </tr>
+          <tr>
+            <td class="model-family model-family-claude">Claude (Anthropic)</td>
+            <td>Claude 3 Haiku</td>
+            <td>200K tokens</td>
+            <td>~150,000 words</td>
+            <td class="cost-tier">💰💰 Medium</td>
+            <td>Fast long-context</td>
+          </tr>
+          <tr>
+            <td class="model-family-claude"></td>
+            <td>Claude 3 Sonnet</td>
+            <td>200K tokens</td>
+            <td>~150,000 words</td>
+            <td class="cost-tier">💰💰💰 High</td>
+            <td>Balanced performance</td>
+          </tr>
+          <tr>
+            <td class="model-family-claude"></td>
+            <td>Claude 3 Opus</td>
+            <td>200K tokens</td>
+            <td>~150,000 words</td>
+            <td class="cost-tier">💰💰💰💰 Very High</td>
+            <td>Premium analysis</td>
+          </tr>
+          <tr>
+            <td class="model-family model-family-mistral">Mistral</td>
+            <td>Mistral 7B</td>
+            <td>32K tokens</td>
+            <td>~24,000 words</td>
+            <td class="cost-tier">💰 Low (Open)</td>
+            <td>Research, fine-tuning</td>
+          </tr>
+          <tr>
+            <td class="model-family-mistral"></td>
+            <td>Mistral Large</td>
+            <td>32K tokens</td>
+            <td>~24,000 words</td>
+            <td class="cost-tier">💰💰💰 High</td>
+            <td>Enterprise apps</td>
+          </tr>
+          <tr>
+            <td class="model-family model-family-llama">LLaMA (Meta)</td>
+            <td>LLaMA 2</td>
+            <td>4K tokens</td>
+            <td>~3,000 words</td>
+            <td class="cost-tier">Free (Self-host)</td>
+            <td>Research, education</td>
+          </tr>
+          <tr>
+            <td class="model-family-llama"></td>
+            <td>Code Llama</td>
+            <td>16K tokens</td>
+            <td>~12,000 words</td>
+            <td class="cost-tier">Free (Self-host)</td>
+            <td>Code development</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer">
+      <div class="key-insights">
+        <h3>Key Insights</h3>
+        <ul>
+          <li><strong>🏆 Context Champions:</strong> Claude models lead with consistent 200K tokens across all variants.</li>
+          <li><strong>💰 Cost Efficiency:</strong> Budget: GPT-3.5, Mistral 7B. Premium: Claude Opus, GPT-4-32K. Value: Claude Haiku, GPT-4-Turbo.</li>
+          <li><strong>🎯 Use Cases:</strong> Short (≤4K): GPT-3.5, LLaMA 2. Medium (16-32K): GPT-4, Code Llama, Mistral. Long (100K+): Claude family, GPT-4-Turbo.</li>
+        </ul>
+      </div>
+      <div class="selection-guide-container">
+        <div class="selection-guide-box">
+            <h3>🧪 Quick Selection Guide</h3>
+            <ol>
+              <li><span class="num">1.</span> <div class="text"><strong>Budget priority?</strong> → GPT-3.5 or Mistral 7B</div></li>
+              <li><span class="num">2.</span> <div class="text"><strong>Long documents?</strong> → Claude Haiku/Sonnet</div></li>
+              <li><span class="num">3.</span> <div class="text"><strong>Highest quality?</strong> → Claude Opus or GPT-4-32K</div></li>
+              <li><span class="num">4.</span> <div class="text"><strong>Code focus?</strong> → Code Llama or Claude</div></li>
+              <li><span class="num">5.</span> <div class="text"><strong>Research/Learning?</strong> → LLaMA 2 <span>(free)</span></div></li>
+            </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide 42: Text Rewriting - Style Variations</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --bg-color: #010409;
+      --card-bg-color: #0D1117;
+      --border-color: #30363D;
+      --text-primary: #E6EDF3;
+      --text-secondary: #7D8590;
+      --accent-color: #58A6FF;
+      --accent-color-light: #79c0ff;
+      --python-keyword: #ff7b72;
+      --python-string: #a5d6ff;
+      --python-comment: #8b949e;
+      --python-function: #d2a8ff;
+      --python-number: #79c0ff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1280px;
+       
+      background-color: var(--bg-color);
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('images/ai_prompt_engineering_text_generation_visualization.jpg');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .background-text {
+      position: absolute;
+      top: 100px;
+      left: 20px;
+      font-size: 64px;
+      font-weight: 700;
+      color: rgba(46, 114, 204, 0.1);
+      z-index: 1;
+      pointer-events: none;
+      transform: rotate(-5deg);
+    }
+    
+    .container {
+      width: 100%;
+      height: 100%;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 2;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 38px;
+      font-weight: 600;
+      color: var(--accent-color-light);
+      background: linear-gradient(90deg, #95c7f7, #58A6FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+    }
+
+    header h2 {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--text-secondary);
+    }
+
+    main {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 24px;
+      min-height: 0; /* Prevents grid from overflowing flex container */
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      background-color: var(--card-bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(10px);
+      background-color: rgba(13, 17, 23, 0.7);
+      transition: all 0.3s ease;
+    }
+
+    .card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .card h3::before {
+      content: '●';
+      color: var(--accent-color);
+      font-size: 14px;
+      margin-right: 10px;
+    }
+
+    .card p {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    
+    .original-card p {
+      color: var(--text-primary);
+      font-size: 16px;
+    }
+    
+    .styles-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .code-template {
+      flex-grow: 1;
+    }
+
+    .code-template pre {
+      background-color: #010409;
+      border-radius: 6px;
+      padding: 16px;
+      overflow-x: auto;
+      height: 100%;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .code-template code .k { color: var(--python-keyword); }
+    .code-template code .f { color: var(--python-function); }
+    .code-template code .s { color: var(--python-string); }
+    .code-template code .c { color: var(--python-comment); }
+    .code-template code .n { color: var(--python-number); }
+
+    .practice-card p {
+      font-family: 'Fira Code', monospace;
+      background-color: #010409;
+      border-radius: 6px;
+      padding: 12px;
+      color: var(--text-primary);
+    }
+
+    footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: var(--text-secondary);
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="background-text">Making AI more accessible</div>
+  <div class="container">
+    <header>
+      <h1>Text Rewriting - Style Variations</h1>
+      <h2>Adapting Content for Different Audiences</h2>
+    </header>
+
+    <main>
+      <div class="column left-column">
+        <div class="card original-card">
+          <h3>Original Text</h3>
+          <p>"Our company's new software update includes several improvements to user experience and performance optimization."</p>
+        </div>
+
+        <div class="styles-row">
+          <div class="card">
+            <h3>Formal</h3>
+            <p>"The latest software revision incorporates significant enhancements to the user experience, alongside substantial performance optimizations."</p>
+          </div>
+          <div class="card">
+            <h3>Casual</h3>
+            <p>"Hey everyone! We've just rolled out a new update that makes the app way smoother and easier to use. Check it out!"</p>
+          </div>
+        </div>
+
+        <div class="styles-row">
+          <div class="card">
+            <h3>Technical</h3>
+            <p>"Version 3.1.0 reduces API latency via payload compression and refactors the UI rendering engine, resulting in a 15% decrease in load times."</p>
+          </div>
+          <div class="card">
+            <h3>Marketing</h3>
+            <p>"Unlock a seamless experience! Our new update supercharges your workflow with lightning-fast performance and an intuitive redesign."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="column right-column">
+        <div class="card code-template">
+          <h3>Python Code Template</h3>
+          <pre><code><span class="k">import</span> litellm
+
+<span class="k">def</span> <span class="f">rewrite_for_audience</span>(text, target_style):
+    <span class="c"># The system message guides the model's tone</span>
+    response = litellm.completion(
+        model=<span class="s">"gpt-3.5-turbo"</span>,
+        messages=[
+            {<span class="s">"role"</span>: <span class="s">"system"</span>,
+             <span class="s">"content"</span>:
+             <span class="s">f"Rewrite text in {target_style} 
+              style while preserving key information."</span>},
+            {<span class="s">"role"</span>: <span class="s">"user"</span>,
+             <span class="s">"content"</span>: <span class="s">f"Rewrite: {text}"</span>}
+        ],
+        max_tokens=<span class="n">150</span>,
+        temperature=<span class="n">0.4</span>
+    )
+    <span class="k">return</span> response.choices[<span class="n">0</span>].message.content</code></pre>
+        </div>
+        <div class="card practice-card">
+          <h3>Practice Challenges</h3>
+          <p>"The meeting is scheduled for 3 PM tomorrow."</p>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <span>⏱️ 25-30 minutes</span>
+      <span>Lab Step 9/17</span>
+      <span>✍️ Style Mastery</span>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mistral Family Context Windows</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --dark-purple: #301E67;
+      --main-purple: #4A00E0;
+      --light-purple: #E8E7FF;
+      --bg-color: #F8F7FF;
+      --text-dark: #1E1A34;
+      --text-light: #FFFFFF;
+      --text-subtle: #5A5478;
+      --border-color: #E0DFF0;
+      --white: #FFFFFF;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #e0e0e0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: var(--bg-color);
+      padding: 35px 45px;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      position: relative;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      flex-shrink: 0;
+    }
+
+    .header-title h1 {
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    .header-title p {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-subtle);
+      margin-top: 4px;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo span {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--dark-purple);
+    }
+    
+    .logo-star-container {
+      width: 32px;
+      height: 32px;
+      background-color: var(--main-purple);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--white);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .row {
+      display: flex;
+      gap: 20px;
+    }
+
+    .card {
+      border-radius: 16px;
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card h2 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .card ul {
+      list-style-type: none;
+      padding-left: 0;
+      flex-grow: 1;
+    }
+
+    .card li {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-subtle);
+      margin-bottom: 8px;
+    }
+    
+    .card li:last-child {
+        margin-bottom: 0;
+    }
+
+    .card li strong {
+      font-weight: 600;
+      color: inherit;
+    }
+
+    /* Model Comparison Cards */
+    .model-card-light {
+      background-color: var(--light-purple);
+      border: 1px solid #D6D4FF;
+    }
+    .model-card-light h2, .model-card-light li { color: var(--text-dark); }
+    .model-card-light li strong { color: var(--dark-purple); }
+
+    .model-card-dark {
+      background: var(--main-purple);
+      background: linear-gradient(135deg, var(--main-purple) 0%, var(--dark-purple) 100%);
+    }
+    .model-card-dark h2, .model-card-dark li, .model-card-dark li strong {
+      color: var(--text-light);
+    }
+    .model-card-dark li {
+        color: #E8E7FF;
+    }
+
+    /* Value Prop Cards */
+    .value-card {
+      background-color: var(--white);
+      border: 1px solid var(--border-color);
+    }
+    
+    .value-card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--dark-purple);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .value-card ul {
+      padding-left: 5px;
+    }
+
+    .value-card li {
+      list-style-type: '•';
+      padding-left: 10px;
+      font-size: 13.5px;
+      color: var(--text-subtle);
+    }
+
+    /* Application Cards */
+    .app-card {
+        background-color: var(--white);
+        border: 1px solid var(--border-color);
+    }
+
+    .app-card h2 {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--dark-purple);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .app-card ul {
+        padding-left: 5px;
+    }
+    
+    .app-card li {
+      list-style-type: '•';
+      padding-left: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text-subtle);
+      margin-bottom: 6px;
+    }
+
+    /* Strategy Card */
+    .strategy-card {
+        background-color: var(--light-purple);
+        border: 1px solid var(--border-color);
+        padding: 15px 20px;
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .strategy-card .emoji {
+        font-size: 28px;
+    }
+
+    .strategy-card p {
+        font-size: 14px;
+        color: var(--dark-purple);
+        line-height: 1.5;
+    }
+    .strategy-card p strong {
+        font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <header class="header">
+      <div class="header-title">
+        <h1>Mistral Family Context Windows</h1>
+        <p>European Open-Source Excellence</p>
+      </div>
+      <div class="header-logo">
+        <span>Mistral AI</span>
+        <div class="logo-star-container">★</div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Row 1: Model Comparison -->
+      <div class="row">
+        <div class="card model-card-light">
+          <h2>Mistral 7B</h2>
+          <ul>
+            <li><strong>Context Window:</strong> 32,768 tokens (~24,000 words)</li>
+            <li><strong>Parameters:</strong> 7 billion (efficient architecture)</li>
+            <li><strong>License:</strong> Apache 2.0 (fully open-source)</li>
+            <li><strong>Best For:</strong> Research, fine-tuning, cost-sensitive applications</li>
+            <li><strong>Deployment:</strong> Can run on consumer hardware</li>
+            <li><strong>Languages:</strong> Excellent multilingual support</li>
+          </ul>
+        </div>
+        <div class="card model-card-dark">
+          <h2>Mistral Large</h2>
+          <ul>
+            <li><strong>Context Window:</strong> 32,768 tokens (~24,000 words)</li>
+            <li><strong>Parameters:</strong> Proprietary large model</li>
+            <li><strong>License:</strong> Commercial API access</li>
+            <li><strong>Best For:</strong> Enterprise applications, production systems</li>
+            <li><strong>Deployment:</strong> Cloud-based API service</li>
+            <li><strong>Performance:</strong> Competitive with GPT-4 class models</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Row 2: Value Propositions -->
+      <div class="row">
+        <div class="card value-card">
+          <h2><span class="emoji">🇪🇺</span>European Privacy & Compliance</h2>
+          <ul>
+            <li>GDPR-compliant by design</li>
+            <li>European data residency options</li>
+            <li>Transparent training data policies</li>
+            <li>Strong privacy protections</li>
+          </ul>
+        </div>
+        <div class="card value-card">
+          <h2><span class="emoji">🔓</span>Open-Source Advantages</h2>
+          <ul>
+            <li>Full model weights available (7B)</li>
+            <li>Custom fine-tuning capabilities</li>
+            <li>No vendor lock-in</li>
+            <li>Community-driven improvements</li>
+          </ul>
+        </div>
+        <div class="card value-card">
+          <h2><span class="emoji">🌍</span>Multilingual Excellence</h2>
+          <ul>
+            <li>Native support for European languages</li>
+            <li>Strong performance in French, German, Spanish, Italian</li>
+            <li>Cultural context understanding</li>
+            <li>Localized business applications</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Row 3: 32K Context Applications -->
+      <div class="row">
+        <div class="card app-card">
+            <h2><span class="emoji">📄</span>Document Processing</h2>
+            <ul>
+                <li>Legal contracts and compliance documents</li>
+                <li>Financial reports and analysis</li>
+                <li>Technical manuals and specifications</li>
+                <li>Academic papers and research</li>
+            </ul>
+        </div>
+        <div class="card app-card">
+            <h2><span class="emoji">💻</span>Code & Development</h2>
+            <ul>
+                <li>Medium-sized codebases analysis</li>
+                <li>API documentation processing</li>
+                <li>Code review and optimization</li>
+                <li>Technical documentation generation</li>
+            </ul>
+        </div>
+      </div>
+      
+      <!-- Row 4: Strategic Positioning -->
+      <div class="row">
+        <div class="card strategy-card">
+            <span class="emoji">🎯</span>
+            <p><strong>Mistral Strategy:</strong> Perfect for organizations prioritizing data sovereignty, open-source flexibility, and European regulatory compliance while maintaining competitive performance.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

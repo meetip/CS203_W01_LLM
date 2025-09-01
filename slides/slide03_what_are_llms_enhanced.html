@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What are Large Language Models?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #1a1a1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: #0A192F;
+      color: #FFFFFF;
+      display: flex;
+      overflow: auto;
+      position: relative;
+    }
+
+    .content-left {
+      width: 60%;
+      padding: 60px 50px 60px 70px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .content-right {
+      width: 40%;
+      background-image: url('images/transformer_llm_architecture_diagram_technical.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    
+    h1 {
+      font-size: 64px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin: 0 0 35px 0;
+      line-height: 1.2;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 18px;
+    }
+
+    li {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      line-height: 1.5;
+      color: #ccd6f6;
+    }
+
+    li::before {
+      content: '▶';
+      font-size: 14px;
+      color: #4d88ff;
+      margin-right: 15px;
+      margin-top: 4px; /* Align with text */
+      flex-shrink: 0;
+    }
+    
+    .separator {
+      margin-top: 25px; /* Space between the two lists */
+    }
+
+    .highlight-term {
+      color: #a8b2d1;
+      font-weight: 600;
+    }
+    
+    .accent-highlight {
+      color: #8892b0;
+      font-weight: normal;
+    }
+    
+    .key-insight-box {
+      background-color: #112240;
+      border-left: 4px solid #64FFDA;
+      padding: 20px;
+      margin-top: 40px;
+      border-radius: 0 4px 4px 0;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #ccd6f6;
+    }
+    
+    .key-insight-box strong {
+      color: #64FFDA;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="content-left">
+      <h1>What are Large Language Models?</h1>
+      <ul>
+        <li>AI systems trained on <span class="accent-highlight">vast amounts</span> of text data</li>
+        <li>Neural networks with <span class="accent-highlight">billions to trillions</span> of parameters</li>
+        <li>Capable of understanding and generating <span class="accent-highlight">human-like</span> text</li>
+        <li>Built primarily on <span class="accent-highlight">Transformer</span> architecture</li>
+      </ul>
+      <ul class="separator">
+        <li><span class="highlight-term">Scale:</span> Trained on petabytes of text from the internet</li>
+        <li><span class="highlight-term">Emergent Abilities:</span> Capabilities that emerge at scale</li>
+        <li><span class="highlight-term">Few-shot Learning:</span> Can learn new tasks from examples</li>
+        <li><span class="highlight-term">Generalization:</span> Apply knowledge across domains</li>
+      </ul>
+      <div class="key-insight-box">
+        <strong>💡 Key Insight:</strong> LLMs learn patterns in language by predicting the next word in a sequence, developing sophisticated understanding of grammar, facts, and reasoning.
+      </div>
+    </div>
+    <div class="content-right"></div>
+  </div>
+</body>
+</html>

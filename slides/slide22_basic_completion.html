@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiteLLM Basic Completion Example</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --bg-color: #0d1117;
+      --card-color: #161b22;
+      --border-color: #30363d;
+      --text-primary: #c9d1d9;
+      --text-secondary: #8b949e;
+      --text-title: #ffffff;
+      --accent-blue: #58a6ff;
+      --code-bg: #0d1117;
+      
+      --code-keyword: #ff7b72;
+      --code-string: #a5d6ff;
+      --code-comment: #8b949e;
+      --code-function: #d2a8ff;
+      --code-number: #79c0ff;
+      --code-operator: #ff7b72;
+      --code-punctuation: #c9d1d9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 1280px;
+      height: 720px;
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .presentation-container {
+      width: 100%;
+      height: 100%;
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: left;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 44px;
+      font-weight: 700;
+      color: var(--text-title);
+      margin-bottom: 4px;
+    }
+
+    header p {
+      font-size: 20px;
+      color: var(--text-secondary);
+    }
+
+    main {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      height: calc(100% - 110px); /* Adjusted for header height */
+    }
+
+    .card {
+      background-color: var(--card-color);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column; 
+    }
+    
+    .card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent-blue);
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .code-container {
+      background-color: var(--code-bg);
+      border-radius: 6px;
+      padding: 12px;
+      flex-grow: 1;
+    }
+
+    pre, code {
+      font-family: 'Fira Code', monospace;
+      white-space: pre-wrap;
+    }
+    
+    .code-large {
+        font-size: 13.5px;
+        line-height: 1.45;
+    }
+    
+    .code-small {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .right-column .card {
+      flex: 1;
+    }
+
+    .output-container {
+      font-family: 'Fira Code', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      background-color: var(--code-bg);
+      padding: 12px;
+      border-radius: 6px;
+      flex-grow: 1;
+    }
+    
+    .output-container .label {
+      font-weight: 500;
+      color: var(--text-title);
+    }
+
+    .insights-list {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 8px;
+    }
+
+    .insights-list li {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    
+    .insights-list li:last-child {
+        margin-bottom: 0;
+    }
+
+    .insights-list .icon {
+      margin-right: 12px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+    
+    .insights-list strong {
+        color: var(--text-title);
+    }
+
+    /* Syntax Highlighting */
+    .s-kw { color: var(--code-keyword); }
+    .s-str { color: var(--code-string); }
+    .s-com { color: var(--code-comment); }
+    .s-fun { color: var(--code-function); }
+    .s-num { color: var(--code-number); }
+    .s-op { color: var(--code-operator); }
+    .s-punc { color: var(--code-punctuation); }
+    .s-arg { color: var(--text-primary); }
+
+  </style>
+</head>
+<body>
+  <div class="presentation-container">
+    <header>
+      <h1>LiteLLM Basic Completion Example</h1>
+      <p>Your First LLM API Call with LiteLLM</p>
+    </header>
+    <main>
+      <div class="card">
+        <h2>Complete Working Example</h2>
+        <div class="code-container">
+<pre class="code-large"><code class="language-python"><span class="s-com"># basic_completion.py</span>
+<span class="s-kw">from</span> <span class="s-arg">litellm</span> <span class="s-kw">import</span> <span class="s-arg">completion</span>
+<span class="s-kw">import</span> <span class="s-arg">json</span>
+
+<span class="s-kw">def</span> <span class="s-fun">basic_llm_call</span><span class="s-punc">():</span>
+    <span class="s-kw">try</span><span class="s-punc">:</span>
+        <span class="s-com"># Make a simple completion request</span>
+        <span class="s-arg">response</span> <span class="s-op">=</span> <span class="s-fun">completion</span><span class="s-punc">(</span>
+            <span class="s-arg">model</span><span class="s-op">=</span><span class="s-str">"gpt-3.5-turbo"</span><span class="s-punc">,</span>
+            <span class="s-arg">messages</span><span class="s-op">=</span><span class="s-punc">[{</span>
+                <span class="s-str">"role"</span><span class="s-punc">:</span> <span class="s-str">"system"</span><span class="s-punc">,</span>
+                <span class="s-str">"content"</span><span class="s-punc">:</span> <span class="s-str">"You are a helpful assistant."</span>
+            <span class="s-punc">}, {</span>
+                <span class="s-str">"role"</span><span class="s-punc">:</span> <span class="s-str">"user"</span><span class="s-punc">,</span>
+                <span class="s-str">"content"</span><span class="s-punc">:</span> <span class="s-str">"Explain machine learning in one sentence."</span>
+            <span class="s-punc">}],</span>
+            <span class="s-arg">temperature</span><span class="s-op">=</span><span class="s-num">0.7</span><span class="s-punc">,</span>
+            <span class="s-arg">max_tokens</span><span class="s-op">=</span><span class="s-num">100</span>
+        <span class="s-punc">)</span>
+        <span class="s-kw">return</span> <span class="s-arg">response</span>
+    <span class="s-kw">except</span> <span class="s-arg">Exception</span> <span class="s-kw">as</span> <span class="s-arg">e</span><span class="s-punc">:</span>
+        <span class="s-fun">print</span><span class="s-punc">(</span><span class="s-kw">f"</span><span class="s-str">Error: {e}</span><span class="s-kw">"</span><span class="s-punc">)</span>
+        <span class="s-kw">return</span> <span class="s-kw">None</span>
+</code></pre>
+        </div>
+      </div>
+      <div class="right-column">
+        <div class="card">
+          <h2>Expected Output</h2>
+          <div class="output-container">
+<span class="label">AI Response:</span>
+Machine learning is a subset of artificial intelligence where computers learn to make predictions or decisions by finding patterns in data without being explicitly programmed for each specific task.
+
+<span class="label">Token Usage:</span>
+Prompt tokens: 32
+Completion tokens: 28
+Total tokens: 60
+          </div>
+        </div>
+        <div class="card">
+          <h2>Error Handling Demonstration</h2>
+          <div class="code-container">
+<pre class="code-small"><code class="language-python"><span class="s-com"># Robust error handling</span>
+<span class="s-kw">def</span> <span class="s-fun">safe_llm_call</span><span class="s-punc">(</span><span class="s-arg">model</span><span class="s-op">=</span><span class="s-str">"gpt-3.5-turbo"</span><span class="s-punc">):</span>
+    <span class="s-kw">try</span><span class="s-punc">:</span>
+        <span class="s-arg">response</span> <span class="s-op">=</span> <span class="s-fun">completion</span><span class="s-punc">(</span>
+            <span class="s-arg">model</span><span class="s-op">=</span><span class="s-arg">model</span><span class="s-punc">,</span>
+            <span class="s-arg">messages</span><span class="s-op">=</span><span class="s-punc">[...],</span>
+            <span class="s-arg">timeout</span><span class="s-op">=</span><span class="s-num">30</span>
+        <span class="s-punc">)</span>
+        <span class="s-kw">return</span> <span class="s-arg">response</span><span class="s-punc">.</span><span class="s-arg">choices</span><span class="s-punc">[</span><span class="s-num">0</span><span class="s-punc">].</span><span class="s-arg">message</span><span class="s-punc">.</span><span class="s-arg">content</span>
+    <span class="s-kw">except</span> <span class="s-arg">litellm</span><span class="s-punc">.</span><span class="s-arg">RateLimitError</span><span class="s-punc">:</span>
+        <span class="s-kw">return</span> <span class="s-str">"Rate limit exceeded."</span>
+    <span class="s-kw">except</span> <span class="s-arg">litellm</span><span class="s-punc">.</span><span class="s-arg">AuthenticationError</span><span class="s-punc">:</span>
+        <span class="s-kw">return</span> <span class="s-str">"Authentication failed."</span>
+    <span class="s-kw">except</span> <span class="s-arg">Exception</span> <span class="s-kw">as</span> <span class="s-arg">e</span><span class="s-punc">:</span>
+        <span class="s-kw">return</span> <span class="s-kw">f"</span><span class="s-str">An error occurred: {str(e)}</span><span class="s-kw">"</span></code></pre>
+          </div>
+        </div>
+        <div class="card" style="flex: 0.8;">
+          <h2>Key Insights & Tips</h2>
+          <ul class="insights-list">
+            <li><span class="icon">💡</span><span><strong>Response Structure</strong>: Access content via <code>response.choices[0].message.content</code></span></li>
+            <li><span class="icon">💡</span><span><strong>Token Counting</strong>: Monitor usage with <code>response.usage</code> for cost tracking.</span></li>
+            <li><span class="icon">💡</span><span><strong>Error Handling</strong>: Always wrap API calls in try-catch blocks for robustness.</span></li>
+            <li><span class="icon">💡</span><span><strong>Timeout</strong>: Set reasonable timeouts to prevent hanging requests.</span></li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

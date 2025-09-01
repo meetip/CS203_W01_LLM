@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Production Best Practices</title>
+  <style>
+    /* CSS Reset and Basic Setup */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    /* Using Google Fonts: Inter for general text and Fira Code for code blocks */
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;600;700&display=swap');
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #000; /* Fallback for viewing area outside the slide */
+      font-family: 'Inter', sans-serif;
+      overflow: auto;
+    }
+
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      background-color: #091528;
+      color: #c8d7eb;
+      display: flex;
+      flex-direction: column; 
+      position: relative;
+    }
+    
+    /* Header */
+    .header {
+      padding: 40px 40px 20px 40px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-size: 48px;
+      font-weight: 700;
+      color: #FFFFFF;
+      animation: fadeInDown 0.8s ease-out;
+    }
+    .header p {
+      font-size: 24px;
+      color: #8cb4e6;
+      margin-top: 8px;
+      animation: fadeInDown 0.8s ease-out 0.2s;
+      animation-fill-mode: backwards;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      padding: 20px 40px 30px 40px;
+     
+    }
+
+    .panel {
+      background-color: #0f213d;
+      border: 1px solid #3a72ba;
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      animation: fadeInUp 0.8s ease-out;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .panel-left { animation-delay: 0.4s; animation-fill-mode: backwards; }
+    .panel-right { animation-delay: 0.6s; animation-fill-mode: backwards; }
+
+    .panel-title {
+      color: #8cb4e6;
+      font-size: 22px;
+      font-weight: 600;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #3a72ba;
+      margin-bottom: 20px;
+    }
+
+    /* Left Panel: Security & Authentication */
+    .security-list {
+      list-style: none;
+    }
+    .security-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .security-item:last-child {
+      margin-bottom: 0;
+    }
+    .security-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 15px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .security-icon svg {
+      fill: #fdd835;
+    }
+    .security-item strong {
+      font-weight: 600;
+      color: #e0eaff;
+    }
+
+    /* Right Panel: Code Block */
+    .code-block {
+      background-color: #0c1a30;
+      border-radius: 8px;
+      padding: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow: auto;
+      flex-grow: 1;
+      white-space: pre;
+    }
+    
+    /* Syntax Highlighting */
+    .code-block .kw { color: #f92672; } /* Keyword */
+    .code-block .fn { color: #66d9ef; } /* Function */
+    .code-block .str { color: #e6db74; } /* String */
+    .code-block .num { color: #a6e22e; } /* Number */
+    .code-block .par { color: #fd971f; } /* Parameter */
+    .code-block .op { color: #f92672; } /* Operator */
+    .code-block .com { color: #75715e; font-style: italic; } /* Comment */
+    .code-block .df { color: #a6e22e; } /* Definition (def name) */
+
+    /* Footer */
+    .footer {
+      padding: 15px 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      color: #a0b0c8;
+      border-top: 1px solid rgba(58, 114, 186, 0.25);
+      flex-shrink: 0;
+      animation: fadeInUp 0.8s ease-out 0.8s;
+      animation-fill-mode: backwards;
+    }
+    .footer-item {
+      display: flex;
+      align-items: center;
+    }
+    .footer-separator {
+      margin: 0 16px;
+      color: rgba(58, 114, 186, 0.5);
+    }
+    .footer-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+    .footer-icon svg {
+      fill: #a0b0c8;
+    }
+    .enterprise-icon {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #a0b0c8;
+      margin-right: 8px;
+      background: linear-gradient(-45deg, transparent 45%, rgba(160, 176, 200, 0.6) 45%, rgba(160, 176, 200, 0.6) 55%, transparent 55%);
+      background-size: 8px 8px;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <header class="header">
+      <h1>Production Best Practices</h1>
+      <p>Deploying LLM Applications at Scale</p>
+    </header>
+
+    <main class="main-content">
+      <div class="panel panel-left">
+        <h2 class="panel-title">Security & Authentication</h2>
+        <ul class="security-list">
+          <li class="security-item">
+            <div class="security-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 1.5A5.5 5.5 0 0 0 6.5 7v3H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1.5V7A5.5 5.5 0 0 0 12 1.5zm0 1.5a3.5 3.5 0 0 1 3.5 3.5V10H8.5V6.5A3.5 3.5 0 0 1 12 3z"/></svg>
+            </div>
+            <div>
+              <strong>API Key Management:</strong> Use environment variables or dedicated secret management services (e.g., AWS Secrets Manager, HashiCorp Vault).
+            </div>
+          </li>
+          <li class="security-item">
+            <div class="security-icon">
+               <svg viewBox="0 0 24 24"><path d="M12 1.5A5.5 5.5 0 0 0 6.5 7v3H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1.5V7A5.5 5.5 0 0 0 12 1.5zm0 1.5a3.5 3.5 0 0 1 3.5 3.5V10H8.5V6.5A3.5 3.5 0 0 1 12 3z"/></svg>
+            </div>
+            <div>
+              <strong>Access Control:</strong> Implement robust rate limiting, user authentication, and strict input validation to prevent abuse and injection attacks.
+            </div>
+          </li>
+          <li class="security-item">
+            <div class="security-icon">
+               <svg viewBox="0 0 24 24"><path d="M12 1.5A5.5 5.5 0 0 0 6.5 7v3H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1.5V7A5.5 5.5 0 0 0 12 1.5zm0 1.5a3.5 3.5 0 0 1 3.5 3.5V10H8.5V6.5A3.5 3.5 0 0 1 12 3z"/></svg>
+            </div>
+            <div>
+              <strong>Data Privacy:</strong> Never include PII or sensitive data in prompts. Ensure compliance with regulations like GDPR and CCPA.
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="panel panel-right">
+        <h2 class="panel-title">Error Handling & Reliability</h2>
+        <div class="code-block"><code><span class="kw">import</span> time
+<span class="kw">import</span> random
+
+<span class="kw">def</span> <span class="df">robust_completion</span>(<span class="par">messages</span>, <span class="par">max_retries</span><span class="op">=</span><span class="num">3</span>):
+    <span class="kw">for</span> attempt <span class="kw">in</span> <span class="fn">range</span>(<span class="par">max_retries</span>):
+        <span class="kw">try</span>:
+            response <span class="op">=</span> <span class="fn">litellm.completion</span>(
+                <span class="par">model</span><span class="op">=</span><span class="str">"gpt-3.5-turbo"</span>,
+                <span class="par">messages</span><span class="op">=</span><span class="par">messages</span>,
+                <span class="par">timeout</span><span class="op">=</span><span class="num">30</span>
+            )
+            <span class="kw">return</span> response.choices[<span class="num">0</span>].message.content
+        <span class="kw">except</span> Exception <span class="kw">as</span> e:
+            <span class="kw">if</span> attempt <span class="op">==</span> <span class="par">max_retries</span> <span class="op">-</span> <span class="num">1</span>:
+                <span class="kw">raise</span> e
+            <span class="fn">time.sleep</span>(<span class="fn">random.uniform</span>(<span class="num">1</span>, <span class="num">3</span>))  <span class="com"># Exponential backoff</span>
+    <span class="kw">return</span> None</code></div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-item">
+        <span class="footer-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586V7z"/></svg>
+        </span>
+        30-35 minutes
+      </div>
+      <span class="footer-separator">|</span>
+      <div class="footer-item">
+        Lab Step 16/17
+      </div>
+      <span class="footer-separator">|</span>
+      <div class="footer-item">
+        <span class="enterprise-icon"></span>
+        Enterprise Ready
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parameter Tuning: Real Examples & Effects</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg-color: rgb(20, 22, 31);
+      --card-bg-color: rgb(30, 33, 48);
+      --text-color: rgb(220, 220, 230);
+      --text-muted-color: rgb(150, 155, 170);
+      --header-color: rgb(255, 255, 255);
+      --accent-cyan: #22d3ee;
+      --accent-green: #34d399;
+      --accent-yellow: #facc15;
+      --accent-orange: #fb923c;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --code-bg: #11131c;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+      box-sizing: border-box;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 44px;
+      font-weight: 700;
+      color: var(--header-color);
+      margin: 0;
+    }
+
+    header p {
+      font-size: 18px;
+      color: var(--text-muted-color);
+      margin-top: 8px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 20px;
+      flex-grow: 1;
+    }
+
+    .card {
+      background-color: var(--card-bg-color);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--header-color);
+    }
+    
+    .code-block {
+      background-color: var(--code-bg);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 11.5px;
+      line-height: 1.6; 
+      white-space: pre;
+      color: #d1d5db;
+    }
+    
+    .code-block .keyword { color: #c084fc; }
+    .code-block .function { color: #60a5fa; }
+    .code-block .string { color: #a3e635; }
+    .code-block .comment { color: #6b7280; }
+    .code-block .number { color: #f97316; }
+    .code-block .parameter { color: #93c5fd; }
+
+    /* Top-Right Card: Results Grid */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+      height: 100%;
+    }
+
+    .result-box {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .result-box .result-title {
+      font-size: 13px;
+      font-weight: 600;
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .result-box p {
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-muted-color);
+      margin: 0;
+    }
+    
+    #res-deterministic .result-title { color: var(--accent-cyan); }
+    #res-balanced .result-title { color: var(--accent-green); }
+    #res-creative .result-title { color: var(--accent-yellow); }
+    #res-highly-creative .result-title { color: var(--accent-orange); }
+    
+    /* Bottom-Left Card: Top-p Effects */
+    .top-p-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-grow: 1;
+    }
+    
+    .top-p-results {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex-grow: 1;
+    }
+
+    .top-p-item {
+        background-color: var(--code-bg);
+        border-radius: 6px;
+        padding: 8px 10px;
+    }
+    
+    .top-p-item strong {
+        font-weight: 600;
+        font-size: 12.5px;
+        color: var(--text-color);
+    }
+
+    .top-p-item p {
+        font-size: 11.5px;
+        margin: 4px 0 0 0;
+        color: var(--text-muted-color);
+        line-height: 1.4;
+    }
+
+    /* Bottom-Right Card: Strategy Guide */
+    .strategy-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      height: 100%;
+    }
+
+    .strategy-item {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .strategy-item .icon {
+      font-size: 20px;
+      margin-right: 14px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .strategy-item .text strong {
+      color: var(--text-color);
+      font-weight: 500;
+      display: inline-block;
+      width: 130px;
+    }
+    
+    .strategy-item .text span {
+      color: var(--text-muted-color);
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="slide">
+  <header>
+    <h1>Parameter Tuning: Real Examples & Effects</h1>
+    <p>See How Parameters Shape LLM Responses</p>
+  </header>
+
+  <div class="main-grid">
+    <!-- Top-Left: Temperature Experiment -->
+    <div class="card">
+      <div class="card-title">Experiment 1: Temperature Effects</div>
+      <div class="code-block">
+<span class="comment"># temperature_effects.py</span>
+<span class="keyword">from</span> litellm <span class="keyword">import</span> completion
+
+<span class="keyword">def</span> <span class="function">test_temperature</span>(<span class="parameter">prompt</span>, <span class="parameter">temperatures</span>=[<span class="number">0.0</span>, <span class="number">0.5</span>, <span class="number">1.0</span>, <span class="number">1.5</span>]):
+    results = {}
+    
+    <span class="keyword">for</span> temp <span class="keyword">in</span> temperatures:
+        response = completion(
+            model=<span class="string">"gpt-3.5-turbo"</span>,
+            messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: prompt}],
+            temperature=temp,
+            max_tokens=<span class="number">50</span>
+        )
+        results[temp] = response.choices[<span class="number">0</span>].message.content
+    
+    <span class="keyword">return</span> results
+
+<span class="comment"># Test with creative writing prompt</span>
+test_prompt = <span class="string">"Write the opening line of a short story about a mysterious door."</span>
+results = test_temperature(test_prompt)
+      </div>
+    </div>
+
+    <!-- Top-Right: Temperature Results -->
+    <div class="card">
+      <div class="card-title">Results: From Deterministic to Creative</div>
+      <div class="results-grid">
+        <div class="result-box" id="res-deterministic">
+          <div class="result-title">Deterministic (temp=0.0)</div>
+          <p>"Sarah had always walked past the old wooden door at the end of the hallway, but today something made her stop and stare."</p>
+        </div>
+        <div class="result-box" id="res-balanced">
+          <div class="result-title">Balanced (temp=0.5)</div>
+          <p>"The brass handle of the peculiar door seemed to glow faintly in the dim corridor light, beckoning Emma closer."</p>
+        </div>
+        <div class="result-box" id="res-creative">
+          <div class="result-title">Creative (temp=1.0)</div>
+          <p>"Nobody remembered when the shimmering door appeared in Mrs. Chen's basement, or why it hummed softly at midnight."</p>
+        </div>
+        <div class="result-box" id="res-highly-creative">
+          <div class="result-title">Highly Creative (temp=1.5)</div>
+          <p>"Seventeen purple butterflies danced around the singing doorframe that definitely hadn't existed yesterday morning."</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom-Left: Top-p Experiment -->
+    <div class="card">
+      <div class="card-title">Experiment 2: Top-p Sampling Effects</div>
+      <div class="top-p-layout">
+          <div class="code-block" style="font-size: 10px; padding: 8px;">
+<span class="comment"># top_p_effects.py</span>
+<span class="keyword">def</span> <span class="function">test_top_p</span>(<span class="parameter">prompt</span>, <span class="parameter">top_p_values</span>=[<span class="number">0.1</span>, <span class="number">0.9</span>, <span class="number">1.0</span>]):
+    results = {}
+    <span class="keyword">for</span> top_p <span class="keyword">in</span> top_p_values:
+        response = completion(
+            model=<span class="string">"gpt-3.5-turbo"</span>,
+            messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: prompt}],
+            temperature=<span class="number">0.8</span>, <span class="comment"># Fixed temperature</span>
+            top_p=top_p, max_tokens=<span class="number">40</span>
+        )
+        results[top_p] = response.choices[<span class="number">0</span>].message.content
+    <span class="keyword">return</span> results
+<span class="comment"># Test with explanation prompt</span>
+explain_prompt = <span class="string">"Explain quantum computing in simple terms."</span>
+top_p_results = test_top_p(explain_prompt)
+          </div>
+          <div class="top-p-results">
+            <div class="top-p-item">
+              <strong>Focused (top_p=0.1)</strong>
+              <p>"Quantum computing uses quantum bits that can exist in multiple states simultaneously, allowing for incredibly fast calculations."</p>
+            </div>
+            <div class="top-p-item">
+              <strong>Balanced (top_p=0.9)</strong>
+              <p>"Think of quantum computing like having a magical computer that can explore many different solutions at once, making it super powerful."</p>
+            </div>
+            <div class="top-p-item">
+              <strong>Full Diversity (top_p=1.0)</strong>
+              <p>"Quantum computing harnesses weird physics phenomena where particles dance between possibilities, creating computational superpowers!"</p>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- Bottom-Right: Parameter Strategy -->
+    <div class="card">
+      <div class="card-title">🎯 Parameter Combination Strategy</div>
+      <ul class="strategy-list">
+        <li class="strategy-item">
+          <div class="icon">📚</div>
+          <div class="text"><strong>Factual content:</strong> <span>Low temp (0.1-0.3) + top_p (0.8-0.9)</span></div>
+        </li>
+        <li class="strategy-item">
+          <div class="icon">✍️</div>
+          <div class="text"><strong>Creative writing:</strong> <span>Med-high temp (0.7-1.2) + top_p (0.9-1.0)</span></div>
+        </li>
+        <li class="strategy-item">
+          <div class="icon">📄</div>
+          <div class="text"><strong>Technical docs:</strong> <span>Very low temp (0.0-0.2) + top_p (0.7-0.9)</span></div>
+        </li>
+        <li class="strategy-item">
+          <div class="icon">💡</div>
+          <div class="text"><strong>Brainstorming:</strong> <span>High temp (1.0-1.5) + top_p (1.0)</span></div>
+        </li>
+        <li class="strategy-item">
+          <div class="icon">⚙️</div>
+          <div class="text"><strong>Consistent output:</strong> <span>temp=0.0 (deterministic mode)</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

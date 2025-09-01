@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokenization in Practice - Real Examples</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #E9ECEF;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 50px;
+      box-sizing: border-box;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 38px;
+      color: #212529;
+      margin: 0 0 8px 0;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 18px;
+      color: #6C757D;
+      margin: 0;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 20px;
+      flex-grow: 1;
+    }
+
+    .card {
+      background-color: #F8F9FA;
+      border: 1px solid #E9ECEF;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #343A40;
+    }
+
+    .label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #495057;
+    }
+
+    .input-box {
+      background-color: #E9ECEF;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+      color: #343A40;
+      white-space: pre-wrap;
+    }
+
+    .tokens-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 40px; /* To prevent layout shift */
+    }
+
+    .token {
+      background-color: #FFFFFF;
+      border: 1px solid #DEE2E6;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 13px;
+      color: #495057;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .token-count {
+      align-self: flex-end;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6C757D;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .bottom-section {
+      grid-column: span 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    
+    .summary-card {
+      background-color: #F8F9FA;
+      border: 1px solid #E9ECEF;
+      border-radius: 12px;
+      padding: 20px;
+      border-top: 4px solid #855ef8;
+    }
+
+    .summary-card-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #343A40;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .summary-list {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .summary-list li {
+        font-size: 14px;
+        color: #495057;
+        line-height: 1.5;
+    }
+
+    .summary-list li::before {
+        content: '•';
+        color: #855ef8;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+    }
+    
+    #observations .summary-list li {
+        padding-left: 5px;
+    }
+
+    #lang-comparison .summary-list li::before {
+        content: '';
+        margin-left: 0;
+    }
+
+    .code-inline {
+        font-family: 'Roboto Mono', monospace;
+        background-color: #E9ECEF;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-size: 0.9em;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <h1>Tokenization in Practice - Real Examples</h1>
+      <p>See How Different Texts Are Tokenized</p>
+    </div>
+
+    <div class="main-content">
+      <!-- Example 1 -->
+      <div class="card">
+        <h3 class="card-title">Example 1: Simple Text</h3>
+        <div>
+          <p class="label">Input:</p>
+          <div class="input-box">"The quick brown fox"</div>
+        </div>
+        <div>
+          <p class="label">GPT-3.5 Tokens:</p>
+          <div class="tokens-container">
+            <span class="token">"The"</span><span class="token">" quick"</span><span class="token">" brown"</span><span class="token">" fox"</span>
+          </div>
+        </div>
+        <p class="token-count">4 tokens</p>
+      </div>
+
+      <!-- Example 2 -->
+      <div class="card">
+        <h3 class="card-title">Example 2: Technical Terms</h3>
+        <div>
+          <p class="label">Input:</p>
+          <div class="input-box">"API authentication token"</div>
+        </div>
+        <div>
+          <p class="label">GPT-3.5 Tokens:</p>
+          <div class="tokens-container">
+            <span class="token">"API"</span><span class="token">" authentication"</span><span class="token">" token"</span>
+          </div>
+        </div>
+        <p class="token-count">3 tokens</p>
+      </div>
+
+      <!-- Example 3 -->
+      <div class="card">
+        <h3 class="card-title">Example 3: Numbers & Special Chars</h3>
+        <div>
+          <p class="label">Input:</p>
+          <div class="input-box">"Price: $29.99 (USD)"</div>
+        </div>
+        <div>
+          <p class="label">GPT-3.5 Tokens:</p>
+          <div class="tokens-container">
+            <span class="token">"Price"</span><span class="token">":"</span><span class="token">" $"</span><span class="token">"29"</span><span class="token">"."</span><span class="token">"99"</span><span class="token">" ("</span><span class="token">"USD"</span><span class="token">")"</span>
+          </div>
+        </div>
+        <p class="token-count">9 tokens</p>
+      </div>
+
+      <!-- Example 4 -->
+      <div class="card">
+        <h3 class="card-title">Example 4: Code Snippet</h3>
+        <div>
+          <p class="label">Input:</p>
+          <div class="input-box">"def hello(): print('Hi!')"</div>
+        </div>
+        <div>
+          <p class="label">GPT-3.5 Tokens:</p>
+          <div class="tokens-container">
+            <span class="token">"def"</span><span class="token">" hello"</span><span class="token">"():"</span><span class="token">" print"</span><span class="token">"('"</span><span class="token">"Hi"</span><span class="token">"!')"</span><span class="token">"\n"</span>
+          </div>
+        </div>
+        <p class="token-count">8 tokens</p>
+      </div>
+
+      <!-- Bottom Section -->
+      <div class="bottom-section">
+        <div class="summary-card" id="lang-comparison">
+          <h3 class="summary-card-title">Language Comparison</h3>
+          <ul class="summary-list">
+            <li><strong>English:</strong> "Hello world" → 2 tokens</li>
+            <li><strong>Spanish:</strong> "Hola mundo" → 3 tokens</li>
+            <li><strong>Chinese:</strong> "你好世界" → 4 tokens</li>
+            <li><strong>Code:</strong> <code class="code-inline">print("hello")</code> → 4 tokens</li>
+          </ul>
+        </div>
+        <div class="summary-card" id="observations">
+          <h3 class="summary-card-title">🔍 Observations</h3>
+          <ul class="summary-list">
+            <li>Spaces are often part of tokens (e.g., <code class="code-inline">" quick"</code>).</li>
+            <li>Punctuation usually gets separate tokens.</li>
+            <li>Familiar words are more efficiently tokenized.</li>
+            <li>Code and technical terms may use more tokens.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

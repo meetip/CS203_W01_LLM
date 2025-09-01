@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiteLLM Installation Step-by-Step</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      background-color: #0a0a0a;
+      font-family: 'Roboto', sans-serif;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: #0b1235;
+      background-image: linear-gradient(135deg, rgba(26, 35, 126, 0.95), rgba(13, 22, 69, 0.98)), url('images/python_code_syntax_highlighting_dark_theme_presentation_background.png');
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: multiply;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      padding: 50px 60px;
+      position: relative;
+    }
+
+    .header h1 {
+      font-size: 48px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .header p {
+      font-size: 22px;
+      color: #a9b5d8;
+      margin-top: 8px;
+      font-weight: 300;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 40px;
+      margin-top: 30px;
+      flex-grow: 1;
+      height: calc(100% - 150px);
+    }
+
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .section h2 {
+      font-size: 26px;
+      font-weight: 500;
+      color: #FFFFFF;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 15px;
+    }
+
+    .code-block-wrapper {
+        margin-bottom: 12px;
+    }
+
+    .code-block-wrapper .label {
+        font-size: 14px;
+        color: #a9b5d8;
+        margin-bottom: 6px;
+    }
+
+    .code-block {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #101838;
+      border-radius: 8px;
+      position: relative;
+      border: 1px solid #2a386c;
+      padding: 12px 15px 12px 30px;
+    }
+
+    .code-block::before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      height: calc(100% - 20px);
+      width: 4px;
+      background-color: #4A90E2;
+      border-radius: 2px;
+    }
+    
+    .code-block pre {
+        white-space: pre-wrap;
+    }
+
+    .code-block code {
+      font-family: 'Fira Code', monospace;
+      font-size: 15px;
+      color: #d4d4d4;
+    }
+
+    .copy-btn {
+      background: none;
+      border: none;
+      color: #8892b0;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      padding: 4px 8px;
+      transition: color 0.2s;
+    }
+
+    .copy-btn:hover {
+      color: #ffffff;
+    }
+
+    .verification-block {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .checkmark {
+        color: #4CAF50;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .expected-output {
+        font-size: 14px;
+        color: #a9b5d8;
+        background: rgba(42, 56, 108, 0.5);
+        padding: 6px 10px;
+        border-radius: 4px;
+        margin-top: 8px;
+        font-family: 'Fira Code', monospace;
+    }
+    
+    .troubleshooting-box {
+      background: rgba(10, 25, 47, 0.6);
+      border: 1px solid #FFC107;
+      border-radius: 12px;
+      padding: 24px;
+      height: fit-content;
+      backdrop-filter: blur(5px);
+    }
+    
+    .troubleshooting-box h3 {
+      font-size: 22px;
+      font-weight: 500;
+      color: #FFC107;
+      margin-bottom: 20px;
+    }
+    
+    .troubleshooting-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .troubleshooting-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .warning-icon {
+      font-size: 18px;
+      color: #FFC107;
+      margin-top: 2px;
+    }
+    
+    .troubleshooting-text p {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #e0e0e0;
+    }
+
+    .troubleshooting-text p strong {
+        color: #ffffff;
+        font-weight: 500;
+    }
+    
+    .troubleshooting-text code {
+      background-color: #333;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      color: #f0f0f0;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 40px;
+      right: 60px;
+      font-size: 16px;
+      color: #a9b5d8;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <header class="header">
+      <h1>LiteLLM Installation Step-by-Step</h1>
+      <p>Step 2: Installing the Universal LLM Interface</p>
+    </header>
+
+    <main class="main-content">
+      <div class="left-panel">
+        <div class="section">
+          <h2>1. Installation Commands</h2>
+          <div class="code-block-wrapper">
+            <p class="label">Primary Method (Recommended):</p>
+            <div class="code-block">
+              <pre><code>pip install litellm</code></pre>
+              <button class="copy-btn">COPY</button>
+            </div>
+          </div>
+          <div class="code-block-wrapper">
+            <p class="label">Alternative for multiple Python versions:</p>
+            <div class="code-block">
+              <pre><code>pip3 install litellm</code></pre>
+              <button class="copy-btn">COPY</button>
+            </div>
+          </div>
+          <div class="code-block-wrapper">
+            <p class="label">Using a Virtual Environment (Best Practice):</p>
+            <div class="code-block">
+              <pre><code>python -m venv llm_env
+source llm_env/bin/activate
+pip install litellm</code></pre>
+              <button class="copy-btn">COPY</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>2. Verification</h2>
+          <div class="code-block-wrapper verification-block">
+            <span class="checkmark">✔</span>
+            <div style="flex-grow: 1;">
+              <div class="code-block">
+                <pre><code>import litellm; print("LiteLLM installed successfully")</code></pre>
+                <button class="copy-btn">COPY</button>
+              </div>
+              <div class="expected-output">Expected Output: LiteLLM installed successfully</div>
+            </div>
+          </div>
+          <div class="code-block-wrapper verification-block">
+            <span class="checkmark">✔</span>
+            <div class="code-block" style="flex-grow: 1;">
+              <pre><code>litellm --version</code></pre>
+              <button class="copy-btn">COPY</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="troubleshooting-box">
+          <h3>Troubleshooting</h3>
+          <div class="troubleshooting-item">
+            <span class="warning-icon">▲</span>
+            <div class="troubleshooting-text">
+              <p><strong>Permission Denied:</strong> If you see a permission error, try installing as a user.</p>
+              <code>pip install litellm --user</code>
+            </div>
+          </div>
+          <div class="troubleshooting-item">
+            <span class="warning-icon">▲</span>
+            <div class="troubleshooting-text">
+              <p><strong>Command Not Found:</strong> If <code>pip</code> or <code>pip3</code> is not found, ensure Python and Pip are in your system's PATH. You may need to install or upgrade them first.</p>
+            </div>
+          </div>
+          <div class="troubleshooting-item">
+            <span class="warning-icon">▲</span>
+            <div class="troubleshooting-text">
+              <p><strong>Version Conflicts:</strong> Dependency issues? A clean virtual environment is the best solution to avoid conflicts with other packages.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>⏱️ 10-15 minutes | Lab Step 2/17</span>
+    </footer>
+  </div>
+</body>
+</html>

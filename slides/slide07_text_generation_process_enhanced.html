@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How LLMs Generate Text - The Complete Process</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    body {
+      width: 1280px;
+      height: 720px;
+      margin: 0;
+      padding: 0;
+      background-color: #101425;
+      color: #EAEAEA;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-y: auto;
+      overflow: hidden;
+    }
+
+    .slide {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 40px; 
+      box-sizing: border-box;
+    }
+
+    .header {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .header h1 {
+      font-size: 38px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header p {
+      font-size: 17px;
+      font-weight: 400;
+      color: #A0AEC0;
+      margin: 8px 0 0 0;
+    }
+
+    .content {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: 290px 1fr 290px;
+      gap: 30px;
+      align-items: center; 
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .left-column {
+        justify-content: space-around;
+        padding: 50px 0;
+    }
+
+    .right-column {
+        justify-content: space-between;
+    }
+
+    .step-box {
+      background-color: rgba(45, 55, 72, 0.5);
+      border-radius: 12px;
+      padding: 18px 22px;
+      border: 1px solid rgba(160, 174, 192, 0.2);
+    }
+
+    .step-box h3 {
+      display: flex;
+      align-items: center;
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+
+    .step-box .number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #4A5568;
+      color: #E2E8F0;
+      font-size: 14px;
+      font-weight: 700;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    
+    .step-box ul {
+      margin: 0;
+      padding-left: 10px;
+      list-style: none;
+    }
+
+    .step-box li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #A0AEC0;
+      margin-bottom: 6px;
+    }
+    
+    .step-box li:last-child {
+        margin-bottom: 0;
+    }
+
+    .step-box li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: #A0AEC0;
+      font-size: 14px;
+    }
+
+    .arrow {
+      text-align: center;
+      font-size: 24px;
+      color: #718096; 
+    }
+
+    .diagram-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .diagram-box {
+        background-color: #F7FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        width: 140px;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .diagram-box .title {
+        color: #4A5568;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .diagram-box .line {
+        background-color: #CBD5E0;
+        height: 4px;
+        border-radius: 2px;
+        margin-bottom: 6px;
+    }
+
+    .llm-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 180px;
+        height: 100px;
+    }
+
+    .llm-circle {
+        width: 90px;
+        height: 90px;
+        background-color: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #2D3748;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 1.2;
+        z-index: 2;
+        box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    
+    .llm-arc {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    .arc1 {
+        border: 6px solid transparent;
+        border-top-color: #2D3748;
+        border-right-color: #2D3748;
+        transform: rotate(-135deg);
+    }
+
+    .arc2 {
+        border: 6px solid transparent;
+        border-bottom-color: #2D3748;
+        border-left-color: #2D3748;
+        transform: rotate(45deg);
+    }
+    
+    .connector {
+        position: absolute;
+        width: 20px;
+        height: 1px;
+        background-color: #E2E8F0;
+    }
+
+    .connector::after {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 1px solid #E2E8F0;
+        background-color: #FFFFFF;
+    }
+    
+    .prompt-connector-start { left: 125px; }
+    .prompt-connector-start::after { right: -6px; top: -5px; border-color: #D53F8C; }
+
+    .output-connector-end { right: 125px; }
+    .output-connector-end::after { left: -6px; top: -5px; }
+
+    .llm-connector-start { left: 242px; top: 50px; transform: rotate(15deg); }
+    .llm-connector-start::after { right: -6px; top: -5px; }
+
+    .llm-connector-end { right: 242px; bottom: 50px; transform: rotate(15deg); }
+    .llm-connector-end::after { left: -6px; top: -5px; border-color: #D53F8C;}
+
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <h1>How LLMs Generate Text - The Complete Process</h1>
+      <p>From Input to Output: Understanding Each Step</p>
+    </div>
+    <div class="content">
+      <div class="column left-column">
+        <div class="step-box">
+          <h3><span class="number">1</span>Input Processing</h3>
+          <ul>
+            <li>User provides prompt or query</li>
+            <li>Text is received by the API endpoint</li>
+            <li>Context and conversation history are gathered</li>
+          </ul>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="step-box">
+          <h3><span class="number">2</span>Tokenization</h3>
+          <ul>
+            <li>Text is broken into tokens (subword units)</li>
+            <li>Special tokens added (start, end, system)</li>
+            <li>Token IDs mapped for model processing</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="diagram-container">
+        <div class="diagram-box">
+            <div class="title">Prompt</div>
+            <div class="line" style="width: 80%;"></div>
+            <div class="line" style="width: 100%;"></div>
+            <div class="line" style="width: 60%;"></div>
+        </div>
+        <div class="connector prompt-connector-start"></div>
+
+        <div class="llm-section">
+            <div class="llm-arc arc1"></div>
+            <div class="llm-arc arc2"></div>
+            <div class="llm-circle">Large<br>Language<br>Models</div>
+        </div>
+
+        <div class="connector output-connector-end"></div>
+        <div class="diagram-box">
+            <div class="title">Output</div>
+            <div class="line" style="width: 100%;"></div>
+            <div class="line" style="width: 100%;"></div>
+            <div class="line" style="width: 90%;"></div>
+            <div class="line" style="width: 40%;"></div>
+        </div>
+        <div class="connector llm-connector-start" style="top: 60px;"></div>
+        <div class="connector llm-connector-end" style="bottom: 60px;"></div>
+      </div>
+
+      <div class="column right-column">
+        <div class="step-box">
+          <h3><span class="number">3</span>Model Processing</h3>
+          <ul>
+            <li>Tokens pass through transformer layers</li>
+            <li>Self-attention mechanisms identify relationships</li>
+            <li>Neural network computes probability distributions</li>
+          </ul>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="step-box">
+          <h3><span class="number">4</span>Next-Token Prediction</h3>
+          <ul>
+            <li>Model predicts most likely next token</li>
+            <li>Sampling parameters (temperature, top-p) applied</li>
+            <li>Token selected based on probability and randomness</li>
+          </ul>
+        </div>
+        <div class="arrow">↓</div>
+        <div class="step-box">
+          <h3><span class="number">5</span>Output Generation</h3>
+          <ul>
+            <li>Process repeats until stop condition met</li>
+            <li>Tokens are decoded back to human text</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

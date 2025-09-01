@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide 44: Role Prompting Workshop</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      width: 1280px;
+      height: 720px;
+      background-color: #0d1117;
+      font-family: 'Roboto', sans-serif;
+      color: #e6f1ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      box-sizing: border-box;
+      padding: 40px 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #040c1a radial-gradient(circle at 50% 50%, rgba(31, 111, 235, 0.1), transparent 60%);
+      position: relative;
+    }
+
+    header {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 48px;
+      font-weight: 700;
+      margin: 0;
+      color: #ffffff;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    header p {
+      font-size: 20px;
+      font-weight: 400;
+      margin: 5px 0 0;
+      color: #8b949e;
+      animation: fadeInDown 0.8s ease-out 0.2s;
+      animation-fill-mode: backwards;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 25px;
+      flex-grow: 1;
+    }
+
+    .panel {
+      background-color: rgba(13, 23, 42, 0.6);
+      border: 1px solid rgba(48, 163, 240, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      box-sizing: border-box;
+      animation: fadeInUp 0.8s ease-out 0.4s;
+      animation-fill-mode: backwards;
+      backdrop-filter: blur(5px);
+    }
+
+    .roles-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .role-category h3 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #c9d1d9;
+      margin: 0 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .role-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .role-tag {
+      background-color: #1f6feb;
+      color: #ffffff;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: 400;
+      transition: background-color 0.3s;
+    }
+
+    .role-tag:hover {
+      background-color: #388bfd;
+    }
+
+    .code-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      background-color: #010409;
+      border: 1px solid #30363d;
+    }
+
+    .code-header {
+      padding: 10px 20px;
+      background-color: #161b22;
+      border-bottom: 1px solid #30363d;
+      font-size: 16px;
+      color: #c9d1d9;
+      font-weight: 500;
+    }
+
+    .code-content {
+      padding: 15px 20px;
+      flex-grow: 1;
+      overflow-y: auto;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+
+    .code-content pre {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .code-content .def {
+      color: #d2a8ff;
+    }
+
+    .code-content .str {
+      color: #a5d6ff;
+    }
+
+    .code-content .comment {
+      color: #8b949e;
+    }
+
+    .code-content .keyword {
+      color: #ff7b72;
+    }
+
+    .code-content .param {
+      color: #79c0ff;
+    }
+
+    .code-content .number {
+      color: #79c0ff;
+    }
+
+    .code-content .func {
+      color: #d2a8ff;
+    }
+
+
+    .bottom-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      margin-top: 20px;
+      height: 110px;
+    }
+
+    .info-card {
+      background-color: rgba(13, 23, 42, 0.6);
+      border: 1px solid rgba(48, 163, 240, 0.2);
+      border-radius: 12px;
+      padding: 15px 20px;
+      display: flex;
+      flex-direction: column;
+      animation: fadeInUp 0.8s ease-out 0.6s;
+      animation-fill-mode: backwards;
+    }
+
+    .info-card h4 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      font-weight: 500;
+      color: #c9d1d9;
+    }
+
+    .info-card ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 14px;
+      color: #8b949e;
+      line-height: 1.6;
+    }
+
+    .info-card ul li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .info-card ul li::before {
+      content: '🎯';
+      font-size: 16px;
+    }
+
+    .info-card p {
+      font-size: 14px;
+      color: #8b949e;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    footer {
+      width: calc(100% - 100px);
+      position: relative;
+      bottom: 15px;
+      left: 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: #8b949e;
+      padding-top: 15px;
+    }
+
+    footer span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="slide-container">
+    <header>
+      <h1>Role Prompting Workshop</h1>
+      <p>Part 3: Advanced Prompt Engineering - System Messages</p>
+    </header>
+
+    <main>
+      <div class="panel roles-panel">
+        <div class="role-category">
+          <h3>🧐 Professional Roles</h3>
+          <div class="role-tags">
+            <div class="role-tag">Teacher</div>
+            <div class="role-tag">Consultant</div>
+            <div class="role-tag">Analyst</div>
+            <div class="role-tag">Code Reviewer</div>
+          </div>
+        </div>
+        <div class="role-category">
+          <h3>🎨 Creative Roles</h3>
+          <div class="role-tags">
+            <div class="role-tag">Storyteller</div>
+            <div class="role-tag">Poet</div>
+            <div class="role-tag">Comedian</div>
+            <div class="role-tag">Game Master</div>
+          </div>
+        </div>
+        <div class="role-category">
+          <h3>🔬 Technical Roles</h3>
+          <div class="role-tags">
+            <div class="role-tag">Software Engineer</div>
+            <div class="role-tag">Data Scientist</div>
+            <div class="role-tag">Technical Writer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel code-panel">
+        <div class="code-header">System Message Implementation</div>
+        <div class="code-content">
+          <pre><code><span class="keyword">def</span> <span class="func">create_role_assistant</span>(<span class="param">role</span>, <span class="param">expertise</span>):
+    system_message = <span class="str">f"""You are a professional {role} with 
+expertise in {expertise}.
+
+Respond in character with appropriate:
+- Tone and vocabulary
+- Professional insights
+- Relevant examples
+- Practical advice"""</span>
+    
+    response = litellm.<span class="func">completion</span>(
+        model=<span class="str">"gpt-3.5-turbo"</span>,
+        messages=[
+            {<span class="str">"role"</span>: <span class="str">"system"</span>, <span class="str">"content"</span>: system_message},
+            {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: user_query}
+        ]
+    )
+    <span class="keyword">return</span> response.choices[<span class="number">0</span>].message.content</code></pre>
+        </div>
+      </div>
+    </main>
+
+    <div class="bottom-section">
+      <div class="info-card">
+        <h4>Workshop Challenges</h4>
+        <ul>
+          <li>Create a coding mentor assistant</li>
+          <li>Design a creative writing coach</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>Consistency Tip</h4>
+        <p>Maintain character throughout the entire conversation for a more immersive experience.</p>
+      </div>
+    </div>
+
+    <footer>
+      <span>⏱️ 25-30 minutes</span>
+      <span>Lab Step 11/17</span>
+      <span>🎭 Role Play</span>
+    </footer>
+
+  </div>
+</body>
+
+</html>

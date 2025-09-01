@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide 43: Error Handling Basics</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --bg-color: #0c131d;
+      --slide-bg: #161b22;
+      --panel-bg: #0d1117;
+      --code-bg: #010409;
+      --border-color: #30363d;
+      --text-primary: #e6edf3;
+      --text-secondary: #848d97;
+      --text-title: #f0f6fc;
+      --accent-blue: #58a6ff;
+      --warning-yellow: #f1e05a;
+      --success-green: #3fb950;
+      --error-red: #f85149;
+      --code-keyword: #ff7b72;
+      --code-string: #a5d6a7;
+      --code-function: #d2a8ff;
+      --code-variable: #79c0ff;
+      --code-comment: #8b949e;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      background-color: var(--bg-color);
+      font-family: 'Inter', sans-serif;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .slide {
+      width: 1280px;
+      background-color: var(--slide-bg);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      padding: 40px 50px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    header h1 {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--text-title);
+      margin: 0;
+      letter-spacing: -1px;
+    }
+
+    header p {
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin: 5px 0 0 0;
+    }
+
+    main {
+      display: flex;
+      flex-grow: 1;
+      gap: 40px;
+      padding-top: 25px;
+      overflow: hidden;
+    }
+
+    .left-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .right-panel {
+      flex: 1.5;
+      display: flex;
+    }
+
+    .panel {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-title);
+      margin: 0 0 18px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .panel ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .common-errors ul li {
+      display: flex;
+      align-items: flex-start;
+      padding-left: 15px;
+      border-left: 4px solid var(--warning-yellow);
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .common-errors .error-type {
+      font-weight: 600;
+      color: var(--warning-yellow);
+      min-width: 140px;
+    }
+    .common-errors .error-desc {
+      color: var(--text-secondary);
+    }
+    
+    .debugging-techniques ul li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    .debugging-techniques .checkbox {
+        width: 18px;
+        height: 18px;
+        background-color: rgba(63, 185, 80, 0.2);
+        border: 1px solid var(--success-green);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--success-green);
+        font-weight: bold;
+    }
+    
+    .code-container {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: auto;
+    }
+
+    pre {
+      margin: 0;
+      height: 100%;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+      font-size: 15px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      color: var(--text-primary);
+    }
+
+    code .keyword { color: var(--code-keyword); }
+    code .string { color: var(--code-string); }
+    code .function { color: var(--code-function); }
+    code .variable { color: var(--code-variable); }
+    code .comment { color: var(--code-comment); }
+    code .parameter { color: #FFAB70; } /* orange-like for parameters */
+
+
+    footer {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 15px;
+      padding-top: 20px;
+      margin-top: auto;
+      color: var(--text-secondary);
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    footer .separator {
+        color: var(--border-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <header>
+      <h1>Error Handling Basics</h1>
+      <p>Part 2 Wrap-up: Robust LLM Applications</p>
+    </header>
+    <main>
+      <div class="left-panel">
+        <div class="panel common-errors">
+          <h2><span class="icon">⚠️</span>Common Error Types</h2>
+          <ul>
+            <li>
+                <div class="error-type">API Errors:</div>
+                <div class="error-desc">Invalid API key, rate limits, quota exceeded</div>
+            </li>
+            <li>
+                <div class="error-type">Connection Errors:</div>
+                <div class="error-desc">Network issues, timeout errors</div>
+            </li>
+            <li>
+                <div class="error-type">Input Errors:</div>
+                <div class="error-desc">Invalid model names, malformed requests</div>
+            </li>
+             <li>
+                <div class="error-type">Response Errors:</div>
+                <div class="error-desc">Empty responses, JSON parsing failures</div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel debugging-techniques">
+          <h2><span class="icon">🔧</span>Debugging Techniques</h2>
+          <ul>
+            <li><span class="checkbox">✓</span>Enable verbose logging ('litellm.set_verbose=True')</li>
+            <li><span class="checkbox">✓</span>Check provider API status pages</li>
+            <li><span class="checkbox">✓</span>Validate input parameters before the call</li>
+            <li><span class="checkbox">✓</span>Isolate and test with minimal examples</li>
+          </ul>
+        </div>
+      </div>
+      <div class="right-panel">
+        <div class="code-container">
+<pre><code><span class="keyword">try</span>:
+    <span class="variable">response</span> = <span class="variable">litellm</span>.<span class="function">completion</span>(
+        <span class="parameter">model</span>=<span class="string">"gpt-3.5-turbo"</span>,
+        <span class="parameter">messages</span>=<span class="variable">messages</span>,
+        <span class="parameter">max_tokens</span>=150
+    )
+    <span class="keyword">return</span> <span class="variable">response</span>.<span class="variable">choices</span>[0].<span class="variable">message</span>.<span class="variable">content</span>
+<span class="keyword">except</span> <span class="variable">litellm</span>.<span class="variable">exceptions</span>.<span class="function">RateLimitError</span> <span class="keyword">as</span> e:
+    <span class="function">print</span>(f<span class="string">"Rate limit exceeded: {e}"</span>)
+    <span class="keyword">return</span> <span class="string">"Please try again later"</span>
+<span class="keyword">except</span> <span class="variable">litellm</span>.<span class="variable">exceptions</span>.<span class="function">AuthenticationError</span> <span class="keyword">as</span> e:
+    <span class="function">print</span>(f<span class="string">"Authentication failed: {e}"</span>)
+    <span class="keyword">return</span> <span class="string">"Check your API key"</span>
+<span class="keyword">except</span> <span class="function">Exception</span> <span class="keyword">as</span> e:
+    <span class="function">print</span>(f<span class="string">"Unexpected error: {e}"</span>)
+    <span class="keyword">return</span> <span class="string">"Something went wrong"</span></code></pre>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <span>⏱️ 15-20 minutes</span>
+      <span class="separator">|</span>
+      <span>Lab Step 10/17</span>
+      <span class="separator">|</span>
+      <span>🔧 Debugging Skills</span>
+    </footer>
+  </div>
+</body>
+</html>

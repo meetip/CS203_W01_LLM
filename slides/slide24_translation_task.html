@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Language Translation with LiteLLM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background-color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+
+        .header {
+            padding: 40px 60px 20px 60px;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 44px;
+            font-weight: 700;
+            color: #1a202c;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .header p {
+            font-size: 18px;
+            font-weight: 400;
+            color: #4a5568;
+            margin: 8px 0 0 0;
+        }
+
+        .content-grid {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 24px;
+            padding: 0 60px 40px 60px;
+        }
+
+        .card {
+            border-radius: 12px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+        }
+
+        .code-card {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .code-card h3 {
+            font-size: 16px;
+            color: #94a3b8;
+            margin: 0 0 12px 0;
+            font-weight: 400;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .code-card pre {
+            margin: 0;
+            font-size: 13.5px;
+            line-height: 1.65;
+            white-space: pre-wrap;
+            word-break: break-all;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        
+        .code-card pre::-webkit-scrollbar { display: none; }
+        .code-card pre { -ms-overflow-style: none; scrollbar-width: none; }
+
+
+        .info-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .info-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0 0 16px 0;
+        }
+        
+        .translation-results {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #4a5568;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .translation-results::-webkit-scrollbar { display: none; }
+        .translation-results { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .translation-item {
+            margin-bottom: 12px;
+        }
+        .translation-item:last-child { margin-bottom: 0; }
+        .translation-item .label { font-weight: 600; color: #1a202c; font-size: 14px;}
+        .translation-item .lang { font-weight: 500; color: #4a5568; }
+
+        .excellence-card {
+            background-color: #f0fdfa;
+            border-left: 4px solid #14b8a6;
+            justify-content: center;
+        }
+        
+        .excellence-card h3 {
+            color: #0f766e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .excellence-card ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style-type: '• ';
+            font-size: 15px;
+            line-height: 1.8;
+            color: #334155;
+        }
+        
+        .excellence-card li {
+            padding-left: 8px;
+            margin-bottom: 12px;
+        }
+        .excellence-card li:last-child { margin-bottom: 0; }
+        .excellence-card strong { font-weight: 600; color: #134e4a; }
+
+        .code .comment { color: #64748b; }
+        .code .keyword { color: #93c5fd; }
+        .code .string { color: #a5b4fc; }
+        .code .function { color: #6ee7b7; }
+        .code .number { color: #facc15; }
+        .code .parameter { color: #f0abfc; }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1>Multi-Language Translation with LiteLLM</h1>
+            <p>Professional Translation Examples with Quality Control</p>
+        </div>
+        <div class="content-grid">
+            <!-- Top-Left: Translation Function -->
+            <div class="card code-card">
+                <h3># translation_example.py</h3>
+                <pre><code class="language-python code"><span class="keyword">from</span> litellm <span class="keyword">import</span> completion
+
+<span class="keyword">def</span> <span class="function">translate_text</span>(<span class="parameter">text</span>, <span class="parameter">target_language</span>, <span class="parameter">source_language</span>=<span class="string">"auto"</span>):
+    <span class="comment"># Create context-aware translation prompt</span>
+    prompt = <span class="string">f"""Translate from {source_language} to {target_language}.
+Maintain original tone and meaning.
+Text: {text}"""</span>
+    
+    response = completion(
+        model=<span class="string">"gpt-3.5-turbo"</span>,
+        messages=[
+            {<span class="string">"role"</span>: <span class="string">"system"</span>, <span class="string">"content"</span>: <span class="string">"You are a professional translator."</span>},
+            {<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: prompt}
+        ],
+        temperature=<span class="number">0.2</span>, <span class="comment"># Low temperature for consistency</span>
+        max_tokens=<span class="number">200</span>
+    )
+    <span class="keyword">return</span> response.choices[<span class="number">0</span>].message.content.strip()</code></pre>
+            </div>
+
+            <!-- Top-Right: Real Translation Results -->
+            <div class="card info-card">
+                <h3>Real Translation Results</h3>
+                <div class="translation-results">
+                    <div class="translation-item">
+                        <div class="label">CASUAL TRANSLATION:</div>
+                        <div><span class="lang">Original (English):</span> Hello, how are you today? I hope you're having a wonderful day!</div>
+                        <div><span class="lang">Spanish:</span> ¡Hola, ¿cómo estás hoy? ¡Espero que tengas un día maravilloso!</div>
+                        <div><span class="lang">French:</span> Bonjour, comment allez-vous aujourd'hui ? J'espère que vous passez une merveilleuse journée !</div>
+                    </div>
+                    <div class="translation-item">
+                        <div class="label">BUSINESS TRANSLATION:</div>
+                        <div><span class="lang">Original (English):</span> Please confirm your attendance at tomorrow's meeting by 3 PM.</div>
+                        <div><span class="lang">Spanish:</span> Por favor, confirme su asistencia a la reunión de mañana antes de las 3 PM.</div>
+                        <div><span class="lang">French:</span> Veuillez confirmer votre présence à la réunion de demain avant 15h.</div>
+                    </div>
+                    <div class="translation-item">
+                        <div class="label">TECHNICAL TRANSLATION:</div>
+                        <div><span class="lang">Original (English):</span> The API endpoint returns a JSON response with user data and authentication tokens.</div>
+                        <div><span class="lang">Spanish:</span> El endpoint de la API devuelve una respuesta JSON con datos de usuario y tokens de autenticación.</div>
+                        <div><span class="lang">French:</span> Le point de terminaison API renvoie une réponse JSON avec des données utilisateur et des jetons d'authentification.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom-Left: Advanced Translation -->
+            <div class="card code-card">
+                <h3># Advanced Translation Features</h3>
+                <pre><code class="language-python code"><span class="comment"># Enhanced translation with quality control</span>
+<span class="keyword">def</span> <span class="function">professional_translate</span>(<span class="parameter">text</span>, <span class="parameter">target_lang</span>):
+    base_prompt = <span class="string">f"""Translate to {target_lang}. Requirements:
+    1. Maintain original meaning and tone
+    2. Use natural, native-speaker phrasing
+    3. Consider cultural context
+    
+    Text: {text}"""</span>
+    
+    response = completion(
+        model=<span class="string">"gpt-4"</span>, <span class="comment"># Use a better model for quality</span>
+        messages=[
+            {<span class="string">"role"</span>: <span class="string">"system"</span>, <span class="string">"content"</span>: <span class="string">"You are a certified professional translator."</span>},
+            {<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: base_prompt}
+        ],
+        temperature=<span class="number">0.1</span>
+    )
+    <span class="keyword">return</span> response.choices[<span class="number">0</span>].message.content</code></pre>
+            </div>
+
+            <!-- Bottom-Right: Translation Excellence -->
+            <div class="card excellence-card">
+                <h3>
+                    <span style="font-size: 24px;">🌍</span>
+                    Translation Excellence
+                </h3>
+                <ul>
+                    <li><strong>Low temperature:</strong> Use 0.1-0.3 for consistent, high-fidelity translations.</li>
+                    <li><strong>Context matters:</strong> Include domain (business, technical, casual) in prompts for better accuracy.</li>
+                    <li><strong>Quality models:</strong> Use advanced models like GPT-4 or Claude for superior translation quality.</li>
+                    <li><strong>Cultural awareness:</strong> Prompt the model to consider cultural nuances, not just literal translation.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

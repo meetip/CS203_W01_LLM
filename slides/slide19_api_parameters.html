@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Parameters: Fine-Tuning LLM Responses</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg-color: #1A1D23;
+      --card-color: #262A33;
+      --text-primary: #E0E5F0;
+      --text-secondary: #9FA8B9;
+      --accent-color: #4FD1C5;
+      --accent-color-light: #72E0D4;
+      --slider-track-color: #4A5568;
+      --border-color: #3A4151;
+      --green-glow: rgba(79, 209, 197, 0.3);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      background-color: #101216;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .ppt-container {
+      width: 1280px;
+      height: 720px;
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      padding: 30px 40px;
+      box-sizing: border-box;
+      overflow: auto;
+      position: relative;
+    }
+
+    /* Header */
+    header {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin: 0;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    header p {
+      font-size: 18px;
+      margin: 4px 0 0;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    /* Main Content Grid */
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    
+    .card {
+      background-color: var(--card-color);
+      border-radius: 12px;
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 10px 0;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+    }
+    .card-title span {
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-left: 8px;
+    }
+
+    .card-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0 0 15px 0;
+    }
+
+    /* Slider Styles */
+    .slider-container {
+      margin-bottom: 15px;
+    }
+    .slider-track {
+      width: 100%;
+      height: 8px;
+      background-color: var(--slider-track-color);
+      border-radius: 4px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .slider-thumb {
+      width: 16px;
+      height: 16px;
+      background-color: #fff;
+      border-radius: 50%;
+      position: absolute;
+      border: 3px solid var(--accent-color);
+      box-shadow: 0 0 8px var(--green-glow);
+      box-sizing: border-box;
+    }
+    .temp-thumb { left: calc(35% - 8px); } /* 0.7 / 2.0 = 35% */
+    .topp-thumb { left: calc(90% - 8px); } /* 0.9 / 1.0 = 90% */
+    
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
+
+    /* Parameter Details List */
+    .param-details {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      font-size: 14px;
+    }
+
+    .param-details li {
+      margin-bottom: 8px;
+    }
+
+    .param-details li strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .param-details li {
+      color: var(--text-secondary);
+    }
+
+    /* Max Tokens Specifics */
+    .max-tokens-icon {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      margin: 0px 0 15px 0;
+      color: var(--text-secondary);
+    }
+    .max-tokens-icon .doc-icon {
+      width: 30px;
+      height: 40px;
+      background: #fff;
+      border-radius: 4px;
+      position: relative;
+    }
+    .max-tokens-icon .doc-icon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-width: 0 10px 10px 0;
+      border-style: solid;
+      border-color: transparent var(--card-color) transparent transparent;
+    }
+    .max-tokens-icon .cross-icon {
+      color: #E53E3E;
+      font-weight: bold;
+    }
+
+    /* Examples Section */
+    .examples-section {
+      background-color: var(--card-color);
+      border-radius: 12px;
+      padding: 15px 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .examples-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .examples-header h3 {
+      font-size: 16px;
+      margin: 0;
+      font-weight: 600;
+      color: var(--accent-color);
+    }
+
+    .examples-header .query {
+      margin-left: 15px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      background-color: #333845;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .example-output {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    .example-output strong {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    
+    /* Advanced Parameters Section */
+    .advanced-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1.2fr;
+        gap: 20px;
+    }
+
+    .advanced-card {
+      background-color: var(--card-color);
+      border-radius: 12px;
+      padding: 15px;
+      box-sizing: border-box;
+      border: 1px solid var(--border-color);
+    }
+
+    .advanced-card .card-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .advanced-card p, .advanced-card ul {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin: 0;
+        line-height: 1.5;
+    }
+    .advanced-card ul {
+      padding-left: 18px;
+      margin-top: 8px;
+    }
+
+    #strategy-card {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 15px var(--green-glow);
+    }
+    #strategy-card ul li::marker {
+        content: '• ';
+        color: var(--accent-color);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ppt-container">
+    <header>
+      <h1>API Parameters: Fine-Tuning LLM Responses</h1>
+      <p>Understanding How Parameters Shape Output</p>
+    </header>
+
+    <main class="main-content">
+      <!-- Core Parameters -->
+      <div class="card-grid">
+        <div class="card">
+          <h2 class="card-title">Temperature <span>(0.0 - 2.0) 🌡️</span></h2>
+          <p class="card-description">Controls randomness and creativity in the output.</p>
+          <div class="slider-container">
+            <div class="slider-track"><div class="slider-thumb temp-thumb"></div></div>
+            <div class="slider-labels"><span>0.0</span><span>0.7</span><span>1.5</span><span>2.0</span></div>
+          </div>
+          <ul class="param-details">
+            <li><strong>Deterministic (0.0):</strong> Always produces the same output. Best for factual queries.</li>
+            <li><strong>Balanced (0.7):</strong> Good mix of consistency and creativity. Recommended for most apps.</li>
+            <li><strong>Creative (1.5+):</strong> High randomness, can sacrifice accuracy. Best for brainstorming.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">Top-p Sampling <span>(0.1 - 1.0) 🎯</span></h2>
+          <p class="card-description">Limits token selection to a cumulative probability mass.</p>
+          <div class="slider-container">
+            <div class="slider-track"><div class="slider-thumb topp-thumb"></div></div>
+            <div class="slider-labels"><span>0.1</span><span>0.9</span><span>1.0</span></div>
+          </div>
+          <ul class="param-details">
+            <li><strong>Focused (0.1):</strong> Only considers the most likely tokens for the next choice.</li>
+            <li><strong>Standard (0.9):</strong> Includes a wide range of probable tokens, allowing for diversity.</li>
+            <li><strong>Max Diversity (1.0):</strong> All tokens are considered, regardless of probability.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2 class="card-title">Max Tokens 📈</h2>
+          <p class="card-description">Sets the maximum length for the generated response.</p>
+          <div class="max-tokens-icon">
+            <div class="doc-icon"></div>
+            <span>→</span>
+            <span class="cross-icon">✂</span>
+          </div>
+          <ul class="param-details">
+            <li>Prevents overly long or incomplete responses and helps control API costs by limiting token usage.</li>
+            <li><strong>Cost Control:</strong> Fewer tokens mean lower costs. Essential for budget management.</li>
+            <li><strong>Response Integrity:</strong> Ensure the limit accounts for both prompt and desired output length.</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Parameter Examples -->
+      <div class="examples-section">
+        <div class="examples-header">
+          <h3>Parameter Examples</h3>
+          <span class="query">Query: "Explain artificial intelligence"</span>
+        </div>
+        <div class="examples-grid">
+          <div class="example-output">
+            <strong>Temperature 0.0 Output:</strong>
+            "Artificial intelligence (AI) refers to the simulation of human intelligence in machines..."
+          </div>
+          <div class="example-output">
+            <strong>Temperature 0.7 Output:</strong>
+            "AI is a fascinating field that involves creating smart machines capable of..."
+          </div>
+          <div class="example-output">
+            <strong>Temperature 1.5 Output:</strong>
+            "Whoa, AI! It's like teaching computers to think and dream, creating digital minds..."
+          </div>
+        </div>
+      </div>
+      
+      <!-- Advanced Parameters -->
+      <div class="advanced-grid">
+        <div class="advanced-card">
+          <h3 class="card-title">Frequency Penalty <span>(-2.0 to 2.0)</span></h3>
+          <p>Reduces token repetition based on frequency. Positive values discourage repetition.</p>
+        </div>
+        <div class="advanced-card">
+          <h3 class="card-title">Presence Penalty <span>(-2.0 to 2.0)</span></h3>
+          <p>Reduces repetition regardless of frequency. Encourages discussing new topics.</p>
+        </div>
+        <div class="advanced-card">
+          <h3 class="card-title">Stop Sequences</h3>
+          <p>Custom strings that halt generation, e.g., `["\n", "---"]`. Useful for structured outputs.</p>
+        </div>
+        <div class="advanced-card" id="strategy-card">
+          <h3 class="card-title">🎨 Parameter Strategy</h3>
+          <ul>
+            <li><strong>Start conservative:</strong> Temp 0.7, top_p 0.9.</li>
+            <li><strong>A/B test:</strong> Try different values for your use case.</li>
+            <li><strong>Task-specific tuning:</strong> Factual (low temp) vs Creative (high temp).</li>
+            <li><strong>Cost control:</strong> Use max_tokens and stop sequences to manage expenses.</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

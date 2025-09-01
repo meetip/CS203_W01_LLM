@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Completion API Fundamentals</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --bg-color: #0F172A;
+      --card-bg-color: #1E293B;
+      --text-primary: #E2E8F0;
+      --text-secondary: #94A3B8;
+      --text-tertiary: #CBD5E1;
+      --accent-color: #38BDF8;
+      --accent-light: #7DD3FC;
+      --border-color: #334155;
+      --code-string: #A5B4FC;
+      --code-key: #7DD3FC;
+      --code-number: #F472B6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1280px;
+      height: 720px;
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+    }
+
+    .slide {
+      width: 100%;
+      height: 100%;
+      padding: 40px 50px;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      gap: 20px;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 44px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -1px;
+    }
+
+    header p {
+      font-size: 20px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    .flow-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .flow-item {
+      background-color: var(--card-bg-color);
+      color: var(--text-tertiary);
+      padding: 8px 24px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .flow-arrow {
+      color: var(--text-secondary);
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex-grow: 1;
+      height: calc(100% - 150px);
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card {
+      background-color: var(--card-bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex-shrink: 0; /* Prevent cards from shrinking */
+    }
+    
+    .card.key-concepts {
+       background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(51, 65, 85, 0.7)), 
+                  radial-gradient(circle at top left, var(--accent-color), transparent 40%);
+       border-color: var(--accent-color);
+    }
+
+    .card h3 {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    
+    .card ul {
+      list-style: none;
+      padding-left: 5px;
+    }
+
+    .card ul li {
+      color: var(--text-tertiary);
+      font-size: 14.5px;
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .card ul li::before {
+      content: '►';
+      color: var(--accent-light);
+      margin-right: 10px;
+      font-size: 10px;
+      padding-top: 4px;
+    }
+
+    pre {
+      background-color: #020617;
+      border-radius: 8px;
+      padding: 14px;
+      font-family: 'Fira Code', monospace;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: var(--text-primary);
+      overflow-x: auto;
+      border: 1px solid #1e293b;
+    }
+    
+    .code-line { white-space: pre-wrap; }
+    .code-key { color: var(--code-key); }
+    .code-string { color: var(--code-string); }
+    .code-number { color: var(--code-number); }
+    .code-punct { color: var(--text-primary); }
+    .code-comment { color: #475569; }
+
+  </style>
+</head>
+<body>
+
+  <div class="slide">
+    <header>
+      <h1>Chat Completion API Fundamentals</h1>
+      <p>Understanding the Foundation of LLM Interactions</p>
+    </header>
+
+    <div class="flow-diagram">
+      <div class="flow-item">REQUEST</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item">LLM SERVICE</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-item">RESPONSE</div>
+    </div>
+
+    <main class="content-grid">
+      <div class="column">
+        <div class="card">
+          <h3>What Are Chat Completion APIs?</h3>
+          <ul>
+            <li>HTTP-based interfaces for interacting with LLMs.</li>
+            <li>Most LLMs follow OpenAI's API format as a de-facto standard.</li>
+            <li>Use RESTful principles with JSON for requests and responses.</li>
+            <li>Enable programmatic access to powerful language model capabilities.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Authentication & Headers</h3>
+          <p style="font-size: 14.5px; color: var(--text-tertiary); line-height: 1.5;">Requests must be authenticated using an API key sent in the headers.</p>
+          <pre><code class="language-json"><span class="code-line"><span class="code-key">Authorization:</span><span class="code-punct"> Bearer YOUR_API_KEY</span></span>
+<span class="code-line"><span class="code-key">Content-Type:</span><span class="code-punct"> application/json</span></span></code></pre>
+        </div>
+        <div class="card key-concepts">
+            <h3>🔑 Essential Concepts</h3>
+            <ul>
+                <li><strong>Stateless:</strong> Each API request is independent and self-contained.</li>
+                <li><strong>Token Counting:</strong> Costs are based on input + output tokens.</li>
+                <li><strong>Rate Limits:</strong> APIs have usage restrictions to ensure fair use.</li>
+            </ul>
+        </div>
+      </div>
+      
+      <div class="column">
+        <div class="card">
+          <h3>Typical Request Components</h3>
+          <pre><code class="language-json">{
+  <span class="code-key">"model"</span>: <span class="code-string">"gpt-3.5-turbo"</span>,
+  <span class="code-key">"messages"</span>: [
+    {<span class="code-key">"role"</span>: <span class="code-string">"user"</span>, <span class="code-key">"content"</span>: <span class="code-string">"Hello!"</span>}
+  ],
+  <span class="code-key">"temperature"</span>: <span class="code-number">0.7</span>,
+  <span class="code-key">"max_tokens"</span>: <span class="code-number">100</span>
+}</code></pre>
+        </div>
+        <div class="card">
+          <h3>Typical Response Structure</h3>
+          <pre><code class="language-json">{
+  <span class="code-key">"id"</span>: <span class="code-string">"chatcmpl-abc123"</span>,
+  <span class="code-key">"choices"</span>: [{
+    <span class="code-key">"message"</span>: {
+      <span class="code-key">"role"</span>: <span class="code-string">"assistant"</span>,
+      <span class="code-key">"content"</span>: <span class="code-string">"Hello! How can I help?"</span>
+    }
+  }],
+  <span class="code-key">"usage"</span>: {
+    <span class="code-key">"prompt_tokens"</span>: <span class="code-number">10</span>,
+    <span class="code-key">"completion_tokens"</span>: <span class="code-number">6</span>,
+    <span class="code-key">"total_tokens"</span>: <span class="code-number">16</span>
+  }
+}</code></pre>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

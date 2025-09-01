@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiteLLM Installation & Setup</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --bg-color: #111317;
+      --card-bg: #1a1d23;
+      --border-color: #313641;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a0a0a0;
+      --accent-green: #34d399;
+      --accent-blue: #60a5fa;
+      --accent-purple: #c084fc;
+      --code-comment: #6a9955;
+      --code-keyword: #569cd6;
+      --code-string: #ce9178;
+      --code-variable: #9cdcfe;
+      --code-function: #dcdcaa;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-image: linear-gradient(rgba(17, 19, 23, 0.9), rgba(17, 19, 23, 0.98)), url('images/python_code_syntax_highlighting_dark_theme_presentation_background.png');
+      background-size: cover;
+      background-position: center;
+      box-sizing: border-box;
+      padding: 30px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow: auto;
+      gap: 18px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .header h1 {
+      font-size: 44px;
+      margin: 0;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .header p {
+      font-size: 18px;
+      margin: 5px 0 0;
+      color: var(--text-secondary);
+    }
+
+    /* Features Bar */
+    .features {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 10px;
+      background-color: rgba(26, 29, 35, 0.6);
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      animation: fadeInUp 0.8s ease-out 0.2s;
+      animation-fill-mode: backwards;
+    }
+
+    .feature-item {
+      flex: 1;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .feature-item strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      display: flex;
+      justify-content: space-between;
+      margin: 0 auto;
+      width: 90%;
+      position: relative;
+      animation: fadeInUp 0.8s ease-out 0.4s;
+      animation-fill-mode: backwards;
+    }
+
+    .progress-bar::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 12.5%;
+      right: 12.5%;
+      height: 2px;
+      background-color: var(--border-color);
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .progress-bar .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-marker {
+      display: inline-block;
+      width: 70px;
+      padding: 6px 0;
+      font-size: 14px;
+      font-weight: 500;
+      border: 2px solid var(--border-color);
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .step-marker.active {
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+      background-color: rgba(52, 211, 153, 0.1);
+    }
+
+    .step-marker.done {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+
+    /* Content Grid */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      gap: 20px;
+      flex-grow: 1;
+      /* Constrain height to ensure fit */
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      animation: zoomIn 0.6s ease-out;
+    }
+
+    .card:nth-child(1) {
+      animation-delay: 0.6s;
+      animation-fill-mode: backwards;
+    }
+
+    .card:nth-child(2) {
+      animation-delay: 0.7s;
+      animation-fill-mode: backwards;
+    }
+
+    .card:nth-child(3) {
+      animation-delay: 0.8s;
+      animation-fill-mode: backwards;
+    }
+
+    .card:nth-child(4) {
+      animation-delay: 0.9s;
+      animation-fill-mode: backwards;
+    }
+
+    .card h3 {
+      margin: 0 0 12px 0;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--accent-blue);
+    }
+
+    .card h4 {
+      margin: 10px 0 5px 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--accent-purple);
+    }
+
+
+    /* Code Styling */
+    pre {
+      margin: 0;
+      background-color: #1e1e1e;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 13.5px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-all;
+      flex-grow: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-color) transparent;
+    }
+
+    code {
+      font-family: 'Fira Code', monospace;
+    }
+
+    .token.comment {
+      color: var(--code-comment);
+    }
+
+    .token.keyword {
+      color: var(--code-keyword);
+    }
+
+    .token.string {
+      color: var(--code-string);
+    }
+
+    .token.variable {
+      color: var(--code-variable);
+    }
+
+    .token.function {
+      color: var(--code-function);
+    }
+
+    .token.operator {
+      color: var(--text-secondary);
+    }
+
+    .token.punctuation {
+      color: #808080;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes zoomIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="slide">
+    <header class="header">
+      <h1>LiteLLM Installation &amp; Setup</h1>
+      <p>Getting Started with Universal LLM Integration</p>
+    </header>
+
+    <div class="features">
+      <div class="feature-item"><strong>Universal Interface:</strong> Single API for 100+ LLM providers</div>
+      <div class="feature-item"><strong>OpenAI Compatible:</strong> Drop-in replacement for OpenAI SDK</div>
+      <div class="feature-item"><strong>Cost Tracking:</strong> Built-in usage and cost monitoring</div>
+      <div class="feature-item"><strong>Error Handling:</strong> Automatic retries and fallbacks</div>
+    </div>
+
+    <div class="progress-bar">
+      <div class="step">
+        <div class="step-marker done">Step 1</div>
+      </div>
+      <div class="step">
+        <div class="step-marker done">Step 2</div>
+      </div>
+      <div class="step">
+        <div class="step-marker done">Step 3</div>
+      </div>
+      <div class="step">
+        <div class="step-marker active">Step 4</div>
+      </div>
+    </div>
+
+
+    <main class="content-grid">
+      <div class="card">
+        <h3>Step 1: Installation</h3>
+        <pre><code class="language-bash"><span class="token comment"># Install LiteLLM using pip</span>
+$ pip install litellm
+
+<span class="token comment"># Or with additional proxy dependencies</span>
+$ pip install 'litellm[proxy]'
+
+<span class="token comment"># Verify installation</span>
+$ python -c <span class="token string">"import litellm; print(litellm.__version__)"</span></code></pre>
+      </div>
+
+      <div class="card">
+        <h3>Step 2: API Key Configuration</h3>
+        <h4>Option A: Environment Variables (Recommended)</h4>
+        <pre><code class="language-bash"><span class="token comment"># For OpenAI</span>
+<span class="token keyword">export</span> <span class="token variable">OPENAI_API_KEY</span>=<span class="token string">"your-openai-key"</span>
+
+<span class="token comment"># For Anthropic</span>
+<span class="token keyword">export</span> <span class="token variable">ANTHROPIC_API_KEY</span>=<span class="token string">"your-anthropic-key"</span></code></pre>
+        <h4>Option B: Python Configuration</h4>
+        <pre><code class="language-python"><span class="token keyword">import</span> litellm
+<span class="token keyword">import</span> os
+
+<span class="token comment"># Set in code (not for production)</span>
+litellm<span class="token punctuation">.</span>api_key <span class="token operator">=</span> <span class="token string">"your-openai-key"</span>
+
+<span class="token comment"># Better: Read from environment</span>
+litellm<span class="token punctuation">.</span>api_key <span class="token operator">=</span> os<span class="token punctuation">.</span>getenv(<span class="token string">"OPENAI_API_KEY"</span>)</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>Step 3: Basic Import &amp; Setup</h3>
+        <pre><code class="language-python"><span class="token comment"># Import LiteLLM</span>
+<span class="token keyword">from</span> litellm <span class="token keyword">import</span> completion
+
+<span class="token comment"># Basic completion call</span>
+response <span class="token operator">=</span> <span class="token function">completion</span>(
+    model<span class="token operator">=</span><span class="token string">"gpt-3.5-turbo"</span>,
+    messages<span class="token operator">=</span>[{
+        <span class="token string">"role"</span>: <span class="token string">"user"</span>, 
+        <span class="token string">"content"</span>: <span class="token string">"Hello!"</span>
+    }]
+)
+
+<span class="token keyword">print</span>(response<span class="token punctuation">.</span>choices[<span class="token number">0</span>]<span class="token punctuation">.</span>message<span class="token punctuation">.</span>content)</code></pre>
+      </div>
+
+      <div class="card">
+        <h3>Step 4: Quick Verification</h3>
+        <pre><code class="language-python"><span class="token comment"># 🚀 Quick test script</span>
+<span class="token keyword">from</span> litellm <span class="token keyword">import</span> completion
+
+<span class="token keyword">try</span>:
+    response <span class="token operator">=</span> <span class="token function">completion</span>(
+        model<span class="token operator">=</span><span class="token string">"gpt-3.5-turbo"</span>,
+        messages<span class="token operator">=</span>[{<span class="token string">"role"</span>: <span class="token string">"user"</span>, <span class="token string">"content"</span>: <span class="token string">"Say hello!"</span>}],
+        max_tokens<span class="token operator">=</span><span class="token number">10</span>
+    )
+    <span class="token keyword">print</span>(<span class="token string">"✅ Setup successful!"</span>)
+    <span class="token keyword">print</span>(<span class="token string">f"Response: </span>{response<span class="token punctuation">.</span>choices[<span class="token number">0</span>]<span class="token punctuation">.</span>message<span class="token punctuation">.</span>content}<span class="token string">"</span>)
+<span class="token keyword">except</span> <span class="token class-name">Exception</span> <span class="token keyword">as</span> e:
+    <span class="token keyword">print</span>(<span class="token string">f"❌ Setup error: </span>{e}<span class="token string">"</span>)</code></pre>
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>

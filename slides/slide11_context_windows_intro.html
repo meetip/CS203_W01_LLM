@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context Windows: The Foundation of LLM Memory</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Lato', sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: #F7F9FC;
+      display: flex;
+      flex-direction: column;
+      padding: 40px;
+      box-sizing: border-box;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid #E0E7FF;
+      margin-bottom: 25px;
+    }
+
+    header h1 {
+      font-size: 44px;
+      font-weight: 900;
+      color: #1E3A8A;
+      margin: 0;
+    }
+
+    header p {
+      font-size: 20px;
+      color: #4B5563;
+      margin: 4px 0 0 0;
+    }
+
+    main {
+      display: flex;
+      flex-grow: 1;
+      gap: 30px;
+     /* min-height: 0; /* Prevents flex children from overflowing */
+    }
+
+    .left-column, .right-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card {
+      background: #FFFFFF;
+      border: 1px solid #E0E7FF;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .card h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1E3A8A;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+
+    #what-is {
+      margin-bottom: 24px;
+    }
+
+    #what-is ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    #what-is li {
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 12px;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #374151;
+    }
+
+    #what-is li::before {
+      content: '•';
+      position: absolute;
+      left: 5px;
+      top: 0px;
+      color: #3B82F6;
+      font-size: 24px;
+      line-height: 1;
+    }
+    
+    #what-is li strong {
+      color: #1F2937;
+      font-weight: 700;
+    }
+
+    #why-matters .points-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    #why-matters .point {
+      flex: 1;
+      background: #F0F5FF;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #D1E0FF;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1E40AF;
+    }
+
+    #why-matters .point .icon {
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+
+    #visual-metaphor {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #visual-metaphor > p {
+      margin: -10px 0 15px 0;
+      font-size: 16px;
+      color: #4B5563;
+    }
+
+    .metaphor-container {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .context-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .context-box .icon-wrapper {
+        border: 3px solid #D1D5DB;
+        border-radius: 12px;
+        position: relative;
+        padding: 10px;
+    }
+    .context-box.small .icon-wrapper { border-top: 6px solid #4ADE80; }
+    .context-box.medium .icon-wrapper { border-top: 6px solid #FBBF24; }
+    .context-box.large .icon-wrapper { border-top: 6px solid #F87171; }
+
+    .context-box .icon-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 35px;
+      height: 7px;
+      background-color: #D1D5DB;
+      border-radius: 3px;
+    }
+
+    .context-box h4 {
+        margin: 10px 0 5px 0;
+        font-size: 16px;
+        font-weight: 700;
+        color: #1F2937;
+    }
+    .context-box span {
+        font-size: 14px;
+        color: #6B7280;
+        margin-bottom: 15px;
+    }
+
+    .context-box ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      font-size: 14px;
+      color: #4B5563;
+    }
+    
+    .context-box li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 8px;
+    }
+
+    .context-box li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+    .small li::before { color: #4ADE80; }
+    .medium li::before { color: #FBBF24; }
+    .large li::before { color: #F87171; }
+
+    .insight-banner {
+      margin-top: 25px; /* Ensures space from content above */
+      background-color: #E0F2FE;
+      border-left: 6px solid #0EA5E9;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .insight-banner .icon {
+      font-size: 24px;
+    }
+
+    .insight-banner p {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.5;
+      color: #0C5460;
+      font-weight: 400;
+    }
+    
+    .insight-banner p strong {
+        font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <header>
+      <h1>Context Windows: The Foundation of LLM Memory</h1>
+      <p>Understanding How Much LLMs Can Remember</p>
+    </header>
+
+    <main>
+      <div class="left-column">
+        <div class="card" id="what-is">
+          <h3>What is a Context Window?</h3>
+          <ul>
+            <li><strong>Definition:</strong> The maximum amount of text (in tokens) an LLM can process at once.</li>
+            <li><strong>Includes:</strong> Your prompt + conversation history + generated response.</li>
+            <li><strong>Limitation:</strong> Fixed size determined by the model's architecture.</li>
+            <li><strong>Behavior:</strong> When exceeded, oldest tokens are "forgotten" (sliding window).</li>
+          </ul>
+        </div>
+        <div class="card" id="why-matters">
+          <h3>Why Context Windows Matter</h3>
+          <div class="points-container">
+            <div class="point">
+              <div class="icon">📈</div>
+              Task Capability
+            </div>
+            <div class="point">
+              <div class="icon">💰</div>
+              Cost Implications
+            </div>
+            <div class="point">
+              <div class="icon">🗺️</div>
+              Use Case Selection
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-column">
+        <div class="card" id="visual-metaphor">
+          <h3>Visual Metaphor</h3>
+          <p>Think of it like a whiteboard:</p>
+          <div class="metaphor-container">
+            <div class="context-box small">
+              <div class="icon-wrapper">
+                 <h4>Small Context</h4>
+                 <span>(4K)</span>
+                 <ul>
+                    <li>Fits a short essay or brief conversation</li>
+                    <li>Good for quick tasks and simple queries</li>
+                 </ul>
+              </div>
+            </div>
+            <div class="context-box medium">
+              <div class="icon-wrapper">
+                 <h4>Medium Context</h4>
+                 <span>(32K)</span>
+                 <ul>
+                    <li>Fits a research paper or long document</li>
+                    <li>Ideal for code projects & doc analysis</li>
+                 </ul>
+              </div>
+            </div>
+            <div class="context-box large">
+              <div class="icon-wrapper">
+                 <h4>Large Context</h4>
+                 <span>(200K)</span>
+                 <ul>
+                    <li>Fits a small book or extensive dialogue</li>
+                    <li>Perfect for complex, long-form analysis</li>
+                 </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="insight-banner">
+      <div class="icon">💡</div>
+      <p><strong>Critical Insight:</strong> Context window size is often the primary factor in choosing an LLM. It's not just about intelligence, but about memory capacity and its suitability for a specific task.</p>
+    </footer>
+  </div>
+</body>
+</html>

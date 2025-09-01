@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chain-of-Thought Reasoning</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #333;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: #031424;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      position: relative;
+      overflow: auto;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.98); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .header {
+      padding: 35px 50px 20px 50px;
+      text-align: left;
+      border-bottom: 1px solid rgba(74, 144, 226, 0.2);
+    }
+
+    .header h1 {
+      font-size: 44px;
+      color: #ffffff;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 22px;
+      color: #4a90e2;
+      margin: 5px 0 0 0;
+      font-weight: 400;
+    }
+
+    .content-container {
+      display: flex;
+      flex-grow: 1;
+      padding: 25px 50px 40px 50px; /* Ensures 40px bottom margin */
+      gap: 30px;
+      box-sizing: border-box;
+      min-height: 0; /* Fix for flexbox overflow in some browsers */
+    }
+
+    .left-panel, .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 0;
+    }
+
+    .left-panel {
+      flex: 1;
+    }
+
+    .right-panel {
+      flex: 1.5;
+    }
+
+    .card {
+      background-color: #0d324d;
+      border-radius: 10px;
+      padding: 20px;
+      box-sizing: border-box;
+      border: 1px solid rgba(74, 144, 226, 0.15);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .card:last-child {
+        margin-bottom: 0;
+    }
+
+    .card h3 {
+      font-size: 20px;
+      color: #66d9ef;
+      margin-top: 0;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #4a90e233;
+      font-weight: 600;
+    }
+    
+    .card ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #e0e0e0;
+      flex-grow: 1;
+    }
+
+    .card ul li {
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .card ul li:last-child {
+      margin-bottom: 0;
+    }
+    
+    .card ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #66d9ef;
+      font-weight: bold;
+    }
+
+    .example-card {
+      background-color: #0d324d;
+      border-radius: 10px;
+      padding: 20px;
+      box-sizing: border-box;
+      border: 1px solid rgba(74, 144, 226, 0.15);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .example-section {
+      margin-bottom: 18px;
+    }
+    
+    .example-section:last-child {
+      margin-bottom: 0;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .example-section h4 {
+      font-size: 18px;
+      color: #ffffff;
+      margin: 0 0 10px 0;
+      font-weight: 600;
+    }
+    
+    .example-code {
+      background-color: #031424;
+      border-radius: 5px;
+      padding: 12px 15px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 15px;
+      color: #e0e0e0;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    .example-section:last-child .example-code {
+        flex-grow: 1;
+    }
+
+    .example-code .prompt {
+      color: #66d9ef;
+    }
+
+    .example-code .answer {
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .example-code .comment {
+      color: #4a90e288;
+    }
+    
+    .example-code .step {
+      color: #4a90e2;
+      font-weight: 500;
+      display: block;
+      margin-top: 8px;
+    }
+    .example-code .reasoning {
+        padding-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <h1>Chain-of-Thought Reasoning</h1>
+      <p>Step-by-Step Problem Solving</p>
+    </div>
+    <div class="content-container">
+      <div class="left-panel">
+        <div class="card">
+          <h3>Why Effective</h3>
+          <ul>
+            <li>Improves reasoning accuracy</li>
+            <li>Makes process transparent</li>
+            <li>Catches logical errors</li>
+            <li>Better problem decomposition</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Best For</h3>
+          <ul>
+            <li>Math problems</li>
+            <li>Logic puzzles</li>
+            <li>Multi-step analysis</li>
+          </ul>
+        </div>
+      </div>
+      <div class="right-panel">
+        <div class="example-card">
+          <div class="example-section">
+            <h4>Without CoT</h4>
+            <div class="example-code">
+              <span class="prompt">"25 * 14?"</span> → <span class="answer">"350"</span> <span class="comment">(no reasoning shown)</span>
+            </div>
+          </div>
+          
+          <div class="example-section">
+            <h4>With CoT</h4>
+            <div class="example-code">
+<span class="prompt">"25 * 14? Think step by step."</span>
+<span class="step">Step 1: 25 * (10 + 4)</span><span class="reasoning">
+Step 2: (25*10) + (25*4)
+Step 3: 250 + 100 = <span class="answer">350</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

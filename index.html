@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPT Presentation Viewer</title>
+    <style>
+        :root {
+            --text-color: #111111;
+            --secondary-text: #666666;
+            --bg-color: #ffffff;
+            --light-bg: #f8f8f8;
+            --dark-bg: #111111;
+            --border-color: #e0e0e0;
+            --hover-color: #f0f0f0;
+            --active-color: #000000;
+            --shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 4px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.05);
+            --btn-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --card-radius: 4px;
+            --btn-radius: 4px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background-color: var(--dark-bg);
+            color: white;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+        }
+        
+        header h1 {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+        }
+        
+        header h1 svg {
+            margin-right: 12px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .view-controls {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--btn-radius);
+            overflow: hidden;
+        }
+        
+        .view-controls button {
+            background: none;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .view-controls button.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .play-button {
+            background-color: white;
+            color: var(--dark-bg);
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--btn-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 13px;
+            box-shadow: var(--btn-shadow);
+        }
+        
+        .play-button:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-1px);
+        }
+        
+        .play-button svg {
+            margin-right: 8px;
+        }
+        
+        /* Grid View */
+        .preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+        
+        /* Grid mode specific styles */
+        .preview-container:not(.list-view) .slide-frame-container {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .preview-container:not(.list-view) .slide-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1280px;
+            height: 720px;
+            border: none;
+            transform-origin: center center;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        /* List View */
+        .preview-container.list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .preview-container.list-view .slide-preview {
+            width: 1280px;
+            height: 720px;
+            max-width: 90vw;
+        }
+        
+        .preview-container.list-view .slide-frame-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            padding-top: 0;
+        }
+        
+        .preview-container.list-view .slide-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .slide-preview {
+            background: var(--bg-color);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+        
+        .slide-preview:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .slide-preview.active {
+            border: 1px solid var(--active-color);
+        }
+        
+        .slide-number {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        /* Presentation mode */
+        .presentation-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Fullscreen mode adjustments */
+        .presentation-mode:fullscreen {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .presentation-mode:-webkit-full-screen {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .presentation-mode:-moz-full-screen {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .presentation-mode:-ms-fullscreen {
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        .presentation-slide {
+            width: 1280px;
+            height: 720px;
+            border: none;
+            transform-origin: center center;
+        }
+        
+        .presentation-slide-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        .presentation-controls {
+            height: 48px;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1001;
+        }
+        
+        .presentation-controls.fullscreen {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .presentation-controls.fullscreen:hover,
+        .presentation-controls.fullscreen.show {
+            opacity: 1;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            max-width: 400px;
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 1px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: white;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .slide-indicators {
+            color: white;
+            font-size: 12px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .presentation-controls button {
+            background-color: transparent;
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .presentation-controls button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .preview-container:not(.list-view) {
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .preview-container:not(.list-view) {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .preview-container:not(.list-view) {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                padding: 16px;
+            }
+            
+            .controls {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+        }
+        
+        /* Dynamic scaling */
+        .slide-frame-container {
+            background: var(--bg-color);
+        }
+        
+        .slide-frame {
+            transition: opacity 0.3s ease;
+        }
+        
+        .slide-frame:not([data-loaded]) {
+            opacity: 0;
+        }
+        
+        .slide-frame[data-loaded] {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+            </svg>
+            Custom Week 1 LLMs & Prompting - Comprehensive Lab Edition (50 slides)
+        </h1>
+        <div class="controls">
+            <div class="view-controls">
+                <button id="grid-view" class="active">Grid</button>
+                <button id="list-view">List</button>
+            </div>
+            <button class="play-button" id="play-presentation">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                Present
+            </button>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div id="preview-container" class="preview-container">
+            <!-- Slides will be dynamically generated -->
+        </div>
+    </div>
+    
+    <!-- Presentation Mode -->
+    <div id="presentation-mode" class="presentation-mode">
+        <div class="presentation-slide-container">
+            <iframe id="presentation-slide" class="presentation-slide"></iframe>
+        </div>
+        <div class="presentation-controls" id="presentation-controls">
+            <button id="prev-slide" title="Previous slide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </button>
+            <div class="slide-indicators">
+                <span id="current-slide">1</span> / <span id="total-slides">33</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <button id="next-slide" title="Next slide">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                </svg>
+            </button>
+            <button id="fullscreen-btn" title="Toggle fullscreen">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                </svg>
+            </button>
+            <button id="exit-presentation" title="Exit presentation">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Slide configuration
+        const slides = [
+            "slides/slide01_enhanced_cover.html", 
+            "slides/slide02_enhanced_objectives.html", 
+            "slides/slide03_what_are_llms_enhanced.html", 
+            "slides/slide04_major_llm_families_enhanced.html", 
+            "slides/slide05_llm_architecture_enhanced.html", 
+            "slides/slide06_applications_enhanced.html", 
+            "slides/slide07_text_generation_process_enhanced.html", 
+            "slides/slide08_tokenization_enhanced.html", 
+            "slides/slide09_tokenization_examples_enhanced.html", 
+            "slides/slide10_next_token_prediction_enhanced.html", 
+            "slides/slide11_context_windows_intro.html", 
+            "slides/slide12_gpt_context_windows.html", 
+            "slides/slide13_claude_context_windows.html", 
+            "slides/slide14_mistral_context_windows.html", 
+            "slides/slide15_llama_context_windows.html", 
+            "slides/slide16_context_comparison_table.html", 
+            "slides/slide17_api_basics.html", 
+            "slides/slide18_message_format.html", 
+            "slides/slide19_api_parameters.html", 
+            "slides/slide20_error_handling.html", 
+            "slides/slide21_litellm_installation.html", 
+            "slides/slide22_basic_completion.html", 
+            "slides/slide23_summarization_task.html", 
+            "slides/slide24_translation_task.html", 
+            "slides/slide25_text_rewriting.html", 
+            "slides/slide26_parameter_tuning.html", 
+            "slides/slide27_capabilities_limitations.html",
+            "slides/slide28_zero_shot_prompting.html",
+            "slides/slide29_few_shot_prompting.html",
+            "slides/slide30_chain_of_thought.html",
+            "slides/slide31_advanced_techniques.html",
+            "slides/slide32_hands_on_overview.html",
+            "slides/slide33_lab_structure.html",
+            "slides/slide34_python_environment_verification.html",
+            "slides/slide35_litellm_installation.html",
+            "slides/slide36_api_key_setup.html",
+            "slides/slide37_connection_test.html",
+            "slides/slide38_text_completion_template.html",
+            "slides/slide39_text_completion_practice.html",
+            "slides/slide40_summarization_task.html",
+            "slides/slide41_translation_task.html",
+            "slides/slide42_text_rewriting.html",
+            "slides/slide43_error_handling.html",
+            "slides/slide44_role_prompting_workshop.html",
+            "slides/slide45_chain_of_thought.html",
+            "slides/slide46_parameter_tuning.html",
+            "slides/slide47_advanced_techniques.html",
+            "slides/slide48_build_ai_assistant.html",
+            "slides/slide49_production_practices.html",
+            "slides/slide50_lab_wrap_up.html"
+        ];
+
+        // DOM elements
+        const previewContainer = document.getElementById('preview-container');
+        const gridViewBtn = document.getElementById('grid-view');
+        const listViewBtn = document.getElementById('list-view');
+        const playBtn = document.getElementById('play-presentation');
+        const presentationMode = document.getElementById('presentation-mode');
+        const presentationSlide = document.getElementById('presentation-slide');
+        const presentationControls = document.getElementById('presentation-controls');
+        const prevBtn = document.getElementById('prev-slide');
+        const nextBtn = document.getElementById('next-slide');
+        const exitBtn = document.getElementById('exit-presentation');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const currentSlideEl = document.getElementById('current-slide');
+        const totalSlidesEl = document.getElementById('total-slides');
+        const progressFill = document.getElementById('progress-fill');
+
+        let currentSlideIndex = 0;
+        let isPresenting = false;
+
+        // Initialize
+        function init() {
+            generatePreviews();
+            setupEventListeners();
+            updateTotalSlides();
+            calculateScale();
+        }
+
+        // Generate slide previews
+        function generatePreviews() {
+            previewContainer.innerHTML = '';
+            
+            slides.forEach((slide, index) => {
+                const slideDiv = document.createElement('div');
+                slideDiv.className = 'slide-preview';
+                slideDiv.innerHTML = `
+                    <div class="slide-number">${index + 1}</div>
+                    <div class="slide-frame-container">
+                        <iframe class="slide-frame" src="${slide}" data-slide-index="${index}"></iframe>
+                    </div>
+                `;
+                
+                // Add click handler
+                slideDiv.addEventListener('click', () => startPresentation(index));
+                
+                previewContainer.appendChild(slideDiv);
+            });
+
+            // Handle iframe load events
+            const iframes = document.querySelectorAll('.slide-frame');
+            iframes.forEach(iframe => {
+                iframe.addEventListener('load', function() {
+                    this.setAttribute('data-loaded', 'true');
+                });
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            gridViewBtn.addEventListener('click', () => setViewMode('grid'));
+            listViewBtn.addEventListener('click', () => setViewMode('list'));
+            playBtn.addEventListener('click', () => startPresentation());
+            
+            prevBtn.addEventListener('click', () => navigateSlide(-1));
+            nextBtn.addEventListener('click', () => navigateSlide(1));
+            exitBtn.addEventListener('click', exitPresentation);
+            fullscreenBtn.addEventListener('click', toggleFullscreen);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', handleKeyboardNavigation);
+            
+            // Resize handler
+            window.addEventListener('resize', calculateScale);
+            
+            // Auto-hide controls in fullscreen
+            let hideControlsTimer;
+            presentationMode.addEventListener('mousemove', () => {
+                if (document.fullscreenElement) {
+                    presentationControls.classList.add('show');
+                    clearTimeout(hideControlsTimer);
+                    hideControlsTimer = setTimeout(() => {
+                        presentationControls.classList.remove('show');
+                    }, 2000);
+                }
+            });
+        }
+
+        // Set view mode
+        function setViewMode(mode) {
+            if (mode === 'list') {
+                previewContainer.classList.add('list-view');
+                listViewBtn.classList.add('active');
+                gridViewBtn.classList.remove('active');
+            } else {
+                previewContainer.classList.remove('list-view');
+                gridViewBtn.classList.add('active');
+                listViewBtn.classList.remove('active');
+            }
+            calculateScale();
+        }
+
+        // Calculate and apply scaling
+        function calculateScale() {
+            requestAnimationFrame(() => {
+                const iframes = document.querySelectorAll('.slide-frame');
+                
+                iframes.forEach(iframe => {
+                    const container = iframe.closest('.slide-frame-container');
+                    if (!container) return;
+                    
+                    const containerWidth = container.clientWidth;
+                    const containerHeight = container.clientHeight;
+                    
+                    if (previewContainer.classList.contains('list-view')) {
+                        // List view - fit to container width while maintaining aspect ratio
+                        const scale = Math.min(containerWidth / 1280, containerHeight / 720);
+                        iframe.style.transform = `scale(${scale})`;
+                        iframe.style.transformOrigin = 'top left';
+                    } else {
+                        // Grid view - center and scale
+                        const scale = Math.min(containerWidth / 1280, containerHeight / 720);
+                        iframe.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                        iframe.style.transformOrigin = 'center center';
+                    }
+                });
+
+                // Scale presentation mode
+                if (isPresenting) {
+                    scalePresentationSlide();
+                }
+            });
+        }
+
+        // Scale presentation slide
+        function scalePresentationSlide() {
+            const container = document.querySelector('.presentation-slide-container');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            const scale = Math.min(containerWidth / 1280, containerHeight / 720);
+            
+            presentationSlide.style.transform = `scale(${scale})`;
+        }
+
+        // Start presentation
+        function startPresentation(startIndex = 0) {
+            currentSlideIndex = startIndex;
+            isPresenting = true;
+            presentationMode.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            loadPresentationSlide();
+            updatePresentationControls();
+            
+            // Auto-enter fullscreen on first play
+            if (startIndex === 0) {
+                setTimeout(() => {
+                    if (document.documentElement.requestFullscreen) {
+                        document.documentElement.requestFullscreen();
+                    }
+                }, 100);
+            }
+        }
+
+        // Load presentation slide
+        function loadPresentationSlide() {
+            presentationSlide.src = slides[currentSlideIndex];
+            scalePresentationSlide();
+        }
+
+        // Navigate slides
+        function navigateSlide(direction) {
+            const newIndex = currentSlideIndex + direction;
+            if (newIndex >= 0 && newIndex < slides.length) {
+                currentSlideIndex = newIndex;
+                loadPresentationSlide();
+                updatePresentationControls();
+            }
+        }
+
+        // Update presentation controls
+        function updatePresentationControls() {
+            currentSlideEl.textContent = currentSlideIndex + 1;
+            const progress = ((currentSlideIndex + 1) / slides.length) * 100;
+            progressFill.style.width = `${progress}%`;
+        }
+
+        // Exit presentation
+        function exitPresentation() {
+            isPresenting = false;
+            presentationMode.style.display = 'none';
+            document.body.style.overflow = '';
+            
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+        }
+
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                presentationMode.requestFullscreen();
+                presentationControls.classList.add('fullscreen');
+            } else {
+                document.exitFullscreen();
+                presentationControls.classList.remove('fullscreen');
+            }
+        }
+
+        // Handle keyboard navigation
+        function handleKeyboardNavigation(e) {
+            if (!isPresenting) return;
+            
+            switch(e.key) {
+                case 'ArrowRight':
+                case 'Space':
+                    navigateSlide(1);
+                    break;
+                case 'ArrowLeft':
+                    navigateSlide(-1);
+                    break;
+                case 'Escape':
+                    exitPresentation();
+                    break;
+                case 'f':
+                case 'F':
+                    toggleFullscreen();
+                    break;
+            }
+        }
+
+        // Update total slides display
+        function updateTotalSlides() {
+            totalSlidesEl.textContent = slides.length;
+        }
+
+        // Handle fullscreen change
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                presentationControls.classList.remove('fullscreen');
+            }
+        });
+
+        // Initialize the application
+        init();
+    </script>
+</body>
+</html>

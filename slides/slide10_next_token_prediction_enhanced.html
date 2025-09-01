@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Next-Token Prediction: The Core Mechanism</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 1280px;
+      height: 720px;
+      background-color: #0F172A;
+      font-family: 'Inter', sans-serif, 'PingFang SC', 'Microsoft YaHei';
+      overflow: hidden;
+    }
+    .slide {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 40px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      color: #E2E8F0;
+    }
+    .header {
+      text-align: center;
+      width: 100%;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-size: 44px;
+      font-weight: 700;
+      margin: 0;
+      color: #FFFFFF;
+      letter-spacing: -1px;
+    }
+    .header h2 {
+      font-size: 20px;
+      font-weight: 400;
+      margin: 8px 0 0 0;
+      color: #94A3B8;
+    }
+    .main-content {
+      width: 100%;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 25px;
+    }
+    .input-context {
+      font-size: 16px;
+      padding: 8px 16px;
+      background-color: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      margin-bottom: 25px;
+    }
+    .input-context span {
+      color: #94A3B8;
+      margin-right: 8px;
+    }
+    .steps-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      width: 100%;
+      gap: 16px;
+    }
+    .step {
+      background-color: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .step-header {
+      font-size: 16px;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+    }
+    .step-header span {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background-color: #334155;
+      color: #94A3B8;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      margin-right: 8px;
+      font-size: 14px;
+    }
+    .step-content {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #CBD5E1;
+    }
+    .step-content ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+    .arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #475569;
+      font-size: 28px;
+      flex-shrink: 0;
+      width: 40px;
+    }
+    .probability-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .probability-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #334155;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+    .probability-item.highlight {
+      background: linear-gradient(to right, #10B981 89.2%, #334155 89.2%);
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+    .token-info {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .code-block {
+      background-color: #0F172A;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      color: #E2E8F0;
+      margin-top: 8px;
+      line-height: 1.4;
+    }
+    .footer {
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: 25px;
+    }
+    .parameters-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .parameter {
+      flex: 1;
+      padding: 15px;
+      background-color: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+    }
+    .parameter h3 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+    .parameter p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #94A3B8;
+    }
+    .insight-box {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background-color: #1E293B;
+      border-left: 4px solid #2DD4BF;
+      padding: 15px 20px;
+      border-radius: 0 8px 8px 0;
+    }
+    .insight-box .icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .insight-box p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #CBD5E1;
+    }
+    .insight-box p strong {
+      color: #E2E8F0;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="header">
+      <h1>Next-Token Prediction: The Core Mechanism</h1>
+      <h2>How LLMs Decide What Comes Next</h2>
+    </div>
+
+    <div class="main-content">
+      <div class="input-context">
+        <span>Input Context:</span><strong>"The capital of France is"</strong>
+      </div>
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-header"><span>1</span>Model Processing</div>
+          <div class="step-content">
+            <ul>
+              <li>All input tokens processed simultaneously.</li>
+              <li>Context is built via self-attention layers.</li>
+              <li>Calculates a probability distribution for the entire vocabulary.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="step">
+          <div class="step-header"><span>2</span>Probability Distribution</div>
+          <div class="step-content">
+            <ul class="probability-list">
+              <li class="probability-item highlight">
+                <div class="token-info"><span>"Paris"</span><span>89.2%</span></div>
+              </li>
+              <li class="probability-item">
+                <div class="token-info"><span>"the"</span><span>3.1%</span></div>
+              </li>
+              <li class="probability-item">
+                <div class="token-info"><span>"located"</span><span>2.8%</span></div>
+              </li>
+              <li class="probability-item">
+                <div class="token-info"><span>"known"</span><span>1.9%</span></div>
+              </li>
+               <li class="probability-item">
+                <div class="token-info"><span>"Lyon"</span><span>0.7%</span></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="step">
+          <div class="step-header"><span>3</span>Token Selection</div>
+          <div class="step-content">
+             <strong>Temp = 0:</strong> Always picks "Paris" (deterministic).<br>
+             <strong>Temp = 0.7:</strong> Weighted random choice (balanced).<br>
+             <strong>Temp = 1.2:</strong> More random, creative output.
+          </div>
+        </div>
+        <div class="arrow">&rarr;</div>
+        <div class="step">
+          <div class="step-header"><span>4</span>Process Repeats</div>
+          <div class="step-content">
+            The output becomes new input:
+            <div class="code-block">"The capital of France is Paris"</div>
+            ...and the model predicts the next token (e.g. a period).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="parameters-container">
+        <div class="parameter">
+          <h3>Temperature (0.0 - 2.0)</h3>
+          <p><strong>Lower:</strong> More focused, predictable.<br><strong>Higher:</strong> More creative, random.</p>
+        </div>
+        <div class="parameter">
+          <h3>Top-p Sampling (0.1 - 1.0)</h3>
+          <p>Considers tokens with cumulative probability up to 'p'. Filters out highly unlikely tokens.</p>
+        </div>
+        <div class="parameter">
+          <h3>Max Tokens</h3>
+          <p>Sets the maximum length of the generated response. Prevents infinite generation loops.</p>
+        </div>
+      </div>
+      <div class="insight-box">
+        <div class="icon">🧠</div>
+        <p><strong>Core Insight:</strong> Every word you see from an LLM was chosen from thousands of possibilities, with the model weighing context, training, and randomness parameters to make each selection.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

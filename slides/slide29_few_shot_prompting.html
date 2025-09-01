@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Few-Shot Prompting Presentation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --bg-dark: #031424;
+      --bg-card: #0d324d;
+      --accent-primary: #4a90e2;
+      --accent-secondary: #66d9ef;
+      --text-light: #d0d8e8;
+      --text-dim: #a0a8b8;
+      --highlight-positive: #28a745;
+      --highlight-negative: #dc3545;
+      --highlight-neutral: #ffc107;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .slide {
+      width: 1280px;  
+      background: radial-gradient(circle at top right, rgba(13, 50, 77, 0.5), #031424 70%);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      padding: 40px 50px;
+      box-sizing: border-box;
+      position: relative;
+      overflow: auto;
+    }
+    
+    .slide-header {
+      text-align: left;
+      margin-bottom: 25px;
+      flex-shrink: 0;
+    }
+
+    .slide-header h1 {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--accent-secondary);
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .slide-header p {
+      font-size: 18px;
+      color: var(--text-dim);
+      margin: 8px 0 0 0;
+      max-width: 80%;
+    }
+
+    .slide-content {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 30px;
+      flex-grow: 1;
+      min-height: 0;
+    }
+
+    .column-left {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .card {
+      background-color: rgba(13, 50, 77, 0.6);
+      border: 1px solid rgba(74, 144, 226, 0.3);
+      border-radius: 12px;
+      padding: 20px 25px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--accent-secondary);
+      margin: 0 0 12px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(74, 144, 226, 0.4);
+    }
+    
+    .definition p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0;
+        color: var(--text-light);
+    }
+
+    .why-it-works ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .why-it-works li {
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 10px;
+      padding-left: 20px;
+      position: relative;
+      color: var(--text-light);
+    }
+
+    .why-it-works li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--accent-primary);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+    
+    .example {
+        padding: 20px 25px;
+    }
+    
+    .code-block {
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 8px;
+      padding: 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 15px;
+      line-height: 1.8;
+      border: 1px solid rgba(74, 144, 226, 0.2);
+      white-space: pre-wrap;
+      color: var(--text-dim);
+      flex-grow: 1;
+      margin-top: 10px;
+    }
+
+    .code-block .review { color: var(--text-light); }
+    .code-block .positive { color: var(--highlight-positive); font-weight: 500; }
+    .code-block .negative { color: var(--highlight-negative); font-weight: 500; }
+    .code-block .neutral { color: var(--highlight-neutral); font-weight: 500; }
+    .code-block .arrow { color: var(--accent-primary); }
+    .code-block .question { color: var(--text-light); font-weight: 500; }
+    
+    .slide-footer {
+        display: grid;
+        grid-template-columns: 5fr 4fr;
+        gap: 30px;
+        margin-top: 25px;
+        flex-shrink: 0;
+    }
+
+    .best-practices h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--accent-secondary);
+        margin: 0 0 10px 0;
+    }
+    
+    .best-practices ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .best-practices li {
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 6px;
+        padding-left: 18px;
+        position: relative;
+        color: var(--text-dim);
+    }
+    
+    .best-practices li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--accent-primary);
+      font-size: 16px;
+    }
+    
+    .pro-tip {
+        background-color: rgba(74, 144, 226, 0.1);
+        border: 1px solid rgba(74, 144, 226, 0.3);
+        border-radius: 10px;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .pro-tip .icon {
+        flex-shrink: 0;
+        color: var(--highlight-neutral);
+    }
+    
+    .pro-tip p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--text-light);
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="slide">
+    <header class="slide-header">
+      <h1>Few-Shot Prompting: Learning from Examples</h1>
+      <p>Providing the LLM with a few examples of the desired input-output pattern to guide its response</p>
+    </header>
+
+    <main class="slide-content">
+      <div class="column-left">
+        <div class="card definition">
+          <h2>Definition</h2>
+          <p>Providing the LLM with a few examples of the desired input-output pattern to guide its response.</p>
+        </div>
+        <div class="card why-it-works">
+          <h2>Why It Works</h2>
+          <ul>
+            <li>Helps the model understand the specific task format</li>
+            <li>Shows desired output style and structure</li>
+            <li>Reduces ambiguity in task interpretation</li>
+            <li>Enables in-context learning</li>
+          </ul>
+        </div>
+      </div>
+      <div class="card example">
+        <h2>Few-Shot Example: Sentiment Analysis</h2>
+        <div class="code-block">Classify the sentiment of these reviews:
+
+<span class="review">Review: 'This product is amazing!'</span> <span class="arrow">→</span> <span class="positive">Positive</span>
+<span class="review">Review: 'Terrible quality, waste of money.'</span> <span class="arrow">→</span> <span class="negative">Negative</span>
+<span class="review">Review: 'It's okay, nothing special.'</span> <span class="arrow">→</span> <span class="neutral">Neutral</span>
+
+<span class="review">Review: 'Love the design and functionality!'</span> <span class="arrow">→</span> <span class="question">?</span></div>
+      </div>
+    </main>
+
+    <footer class="slide-footer">
+        <div class="best-practices">
+            <h3>Best Practices</h3>
+            <ul>
+                <li>Use diverse, representative examples</li>
+                <li>Keep examples concise but complete</li>
+                <li>Show edge cases when relevant</li>
+                <li>Maintain consistent formatting across examples</li>
+            </ul>
+        </div>
+        <div class="pro-tip">
+            <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2C9.239 2 7 4.239 7 7c0 2.23 1.522 4.09 3.5 4.7v0.3c0 .828.672 1.5 1.5 1.5s1.5-.672 1.5-1.5v-0.3c1.978-.61 3.5-2.47 3.5-4.7C17 4.239 14.761 2 12 2z"></path>
+                  <path d="M12 14c-2.761 0-5 2.239-5 5v1h10v-1c0-2.761-2.239-5-5-5z"></path>
+                  <path d="M12 22v-2"></path>
+                </svg>
+            </div>
+            <p><strong>Pro Tip:</strong> "2-5 examples are usually sufficient for most tasks"</p>
+        </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

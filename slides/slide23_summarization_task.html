@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Summarization with LiteLLM</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@400;500&display=swap');
+
+    body {
+      width: 1280px;
+      height: 720px;
+      margin: 0;
+      padding: 40px 50px;
+      box-sizing: border-box;
+      background: #0f172a;
+      background-image: radial-gradient(circle at top left, #1e293b 0%, #0f172a 50%);
+      font-family: 'Roboto', 'Segoe UI', sans-serif, 'PingFang SC', 'Microsoft YaHei';
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .header {
+      padding-bottom: 20px;
+      border-bottom: 1px solid #334155;
+      margin-bottom: 24px;
+    }
+
+    .header h1 {
+      font-size: 38px;
+      color: #f8fafc;
+      margin: 0 0 5px 0;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 18px;
+      color: #94a3b8;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .grid-container {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 24px;
+      overflow: auto;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: #5eead4;
+      margin: 0 0 12px 0;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #334155;
+    }
+
+    .card-content {
+      overflow-y: auto;
+      flex-grow: 1;
+      padding-right: 10px; /* space for scrollbar */
+    }
+
+    /* Custom Scrollbar */
+    .card-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    .card-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .card-content::-webkit-scrollbar-thumb {
+      background-color: #475569;
+      border-radius: 3px;
+    }
+    .card-content::-webkit-scrollbar-thumb:hover {
+      background-color: #64748b;
+    }
+
+    /* Text block styles */
+    .text-block p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .text-block p strong {
+        color: #94a3b8;
+        font-weight: 500;
+    }
+
+    /* Code block styles */
+    .code-block {
+      background-color: rgba(15, 23, 42, 0.5);
+      border-radius: 8px;
+      padding: 12px;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .code-block pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+    .code-block .code-comment { color: #64748b; }
+    .code-block .code-keyword { color: #c084fc; }
+    .code-block .code-function { color: #7dd3fc; }
+    .code-block .code-string { color: #fde047; }
+    .code-block .code-number { color: #fb923c; }
+    .code-block .code-decorator { color: #f472b6; }
+
+    /* Pro-tips styles */
+    .tips-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .tips-list li {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    
+    .tips-list li:last-child {
+        margin-bottom: 0;
+    }
+
+    .tips-list li::before {
+      content: '🚀';
+      margin-right: 12px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .tips-list strong {
+      color: #93c5fd;
+      font-weight: 500;
+      margin-right: 6px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>Text Summarization with LiteLLM</h1>
+    <p>Complete Example with Real Input and Output</p>
+  </header>
+
+  <div class="grid-container">
+    <!-- Sample Input Text -->
+    <div class="card">
+      <h2>Sample Input Text</h2>
+      <div class="card-content text-block">
+        <p><strong>Sample Article:</strong> "Recent advances in artificial intelligence have transformed multiple industries. Machine learning algorithms can now process vast amounts of data to identify patterns and make predictions with unprecedented accuracy. In healthcare, AI systems assist doctors in diagnosing diseases by analyzing medical images and patient data. The financial sector uses AI for fraud detection, algorithmic trading, and risk assessment. Meanwhile, autonomous vehicles rely on computer vision and neural networks to navigate complex traffic scenarios. Despite these achievements, challenges remain in AI ethics, data privacy, and ensuring algorithmic fairness across diverse populations. As AI continues to evolve, researchers emphasize the importance of responsible development and deployment of these powerful technologies."</p>
+      </div>
+    </div>
+
+    <!-- Complete Code Implementation -->
+    <div class="card" style="grid-row: span 2;">
+      <h2>Complete Code Implementation</h2>
+      <div class="card-content code-block">
+        <pre><code><span class="code-comment"># summarization_example.py</span>
+<span class="code-keyword">from</span> litellm <span class="code-keyword">import</span> completion
+
+<span class="code-keyword">def</span> <span class="code-function">summarize_text</span>(text, length=<span class="code-string">"brief"</span>):
+    <span class="code-comment"># Define length instructions</span>
+    length_instructions = {
+        <span class="code-string">"brief"</span>: <span class="code-string">"in 1-2 sentences"</span>,
+        <span class="code-string">"medium"</span>: <span class="code-string">"in 3-4 sentences"</span>,
+        <span class="code-string">"detailed"</span>: <span class="code-string">"in 5-6 sentences with key points"</span>
+    }
+    
+    instruction = length_instructions.get(length, <span class="code-string">"in 2-3 sentences"</span>)
+    
+    <span class="code-keyword">try</span>:
+        response = completion(
+            model=<span class="code-string">"gpt-3.5-turbo"</span>,
+            messages=[
+                {
+                    <span class="code-string">"role"</span>: <span class="code-string">"system"</span>,
+                    <span class="code-string">"content"</span>: <span class="code-string">f"You are an expert summarizer. Provide clear, concise summaries that capture the main points. Summarize the given text {instruction}."</span>
+                },
+                {
+                    <span class="code-string">"role"</span>: <span class="code-string">"user"</span>,
+                    <span class="code-string">"content"</span>: <span class="code-string">f"Please summarize this text:\n\n{text}"</span>
+                }
+            ],
+            temperature=<span class="code-number">0.3</span>,  <span class="code-comment"># Lower temperature for consistent summaries</span>
+            max_tokens=<span class="code-number">150</span>
+        )
+        
+        <span class="code-keyword">return</span> response.choices[<span class="code-number">0</span>].message.content.strip()
+    
+    <span class="code-keyword">except</span> Exception <span class="code-keyword">as</span> e:
+        <span class="code-keyword">return</span> <span class="code-string">f"Summarization failed: {str(e)}"</span>
+
+<span class="code-comment"># Sample article text (shortened for example)</span>
+article = <span class="code-string">"""Recent advances in artificial intelligence have transformed multiple industries..."""</span>
+
+<span class="code-comment"># Test different summary lengths</span>
+brief_summary = summarize_text(article, <span class="code-string">"brief"</span>)
+medium_summary = summarize_text(article, <span class="code-string">"medium"</span>)
+
+<span class="code-function">print</span>(<span class="code-string">"Brief Summary:"</span>)
+<span class="code-function">print</span>(brief_summary)
+<span class="code-function">print</span>(<span class="code-string">"\nMedium Summary:"</span>)
+<span class="code-function">print</span>(medium_summary)
+</code></pre>
+      </div>
+    </div>
+    
+    <!-- Actual Output Results -->
+    <div class="card">
+      <h2>Actual Output Results</h2>
+      <div class="card-content text-block">
+        <p><strong>Brief Summary:</strong>
+AI has revolutionized multiple industries through advanced machine learning algorithms that analyze data and make accurate predictions. While AI shows great promise in healthcare, finance, and autonomous vehicles, challenges remain in ethics, privacy, and algorithmic fairness.
+
+<strong>Medium Summary:</strong>
+Artificial intelligence has significantly transformed various industries by using machine learning algorithms to process large datasets and make highly accurate predictions. AI applications now span healthcare for medical diagnosis, finance for fraud detection and trading, and transportation through autonomous vehicles. However, the field faces ongoing challenges related to AI ethics, data privacy protection, and ensuring fair algorithmic outcomes across different population groups.
+
+<strong>Token Usage:</strong> 89 prompt tokens, 67 completion tokens, 156 total tokens</p>
+      </div>
+    </div>
+
+    <!-- Pro Tips -->
+    <div class="card">
+      <h2>Pro Tips</h2>
+      <div class="card-content">
+        <ul class="tips-list">
+          <li><strong>Temperature 0.3:</strong> Lower temp produces more focused and consistent summaries.</li>
+          <li><strong>System Prompts:</strong> Clearly define the AI's role, style, and length requirements for better control.</li>
+          <li><strong>Length Control:</strong> Use 'max_tokens' as a hard limit to manage output length and cost.</li>
+          <li><strong>Batch Processing:</strong> For multiple documents, loop through them to call the function efficiently.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

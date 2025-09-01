@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Capabilities & Current Limitation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .slide {
+      width: 1280px;
+      max-height: 720px;
+      overflow-y: auto;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      padding: 32px 48px;
+      box-sizing: border-box;
+      overflow: auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .header h1 {
+      font-size: 38px;
+      color: #1a202c;
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 18px;
+      color: #718096;
+      margin: 8px 0 0;
+    }
+
+    /* Main Content */
+    .main-content {
+      display: flex;
+      flex: 1;
+      gap: 40px;
+      padding: 20px 0;
+    }
+
+    .column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .column h2 {
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0 0 8px;
+      padding-bottom: 8px;
+    }
+
+    .capabilities-title {
+      color: #38A169;
+      /* Green */
+      border-bottom: 3px solid #68D391;
+    }
+
+    .limitations-title {
+      color: #DD6B20;
+      /* Orange */
+      border-bottom: 3px solid #F6AD55;
+    }
+
+    .item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .item-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #2d3748;
+      display: flex;
+      align-items: center;
+    }
+
+    .item-title span {
+      margin-right: 10px;
+      font-size: 20px;
+    }
+
+    .item ul {
+      margin: 0;
+      padding-left: 30px;
+      list-style: none;
+    }
+
+    .item li {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #4a5568;
+      position: relative;
+    }
+
+    .item li::before {
+      content: '•';
+      position: absolute;
+      left: -15px;
+      color: #a0aec0;
+    }
+
+    /* Footer Section */
+    .footer-section {
+      padding-top: 16px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .footer-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 12px;
+    }
+
+    .footer-content {
+      display: flex;
+      gap: 24px;
+    }
+
+    .context-impact-container {
+      flex: 2;
+    }
+
+    .context-columns {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+    }
+
+    .context-box {
+      flex: 1;
+    }
+
+    .context-box h4 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .context-box p {
+      margin: 0 0 4px;
+      font-size: 13.5px;
+      line-height: 1.4;
+      color: #4a5568;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .context-box p span {
+      margin-right: 6px;
+      line-height: 1;
+    }
+
+    .mitigation-box {
+      flex: 1;
+      background-color: #EBF8FF;
+      border: 1px solid #BEE3F8;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+
+    .mitigation-box h4 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #2B6CB0;
+      display: flex;
+      align-items: center;
+    }
+
+    .mitigation-box h4 span {
+      margin-right: 8px;
+      font-size: 20px;
+    }
+
+    .mitigation-box ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mitigation-box li {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #2C5282;
+      margin-bottom: 2px;
+    }
+
+    .mitigation-box li strong {
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="slide">
+    <div class="header">
+      <h1>LLM Capabilities & Current Limitation</h1>
+      <p>Understanding What LLMs Can and Cannot Do</p>
+    </div>
+
+    <div class="main-content">
+      <div class="column">
+        <h2 class="capabilities-title">What LLMs Excel At</h2>
+        <div class="item">
+          <p class="item-title"><span>🏆</span>Text Generation & Writing</p>
+          <ul>
+            <li>Creative writing, technical documentation, email composition, content creation</li>
+            <li>Style adaptation and rewriting, multiple language support</li>
+          </ul>
+        </div>
+        <div class="item">
+          <p class="item-title"><span>📊</span>Data Analysis & Summarization</p>
+          <ul>
+            <li>Document summarization and analysis, information extraction from text</li>
+            <li>Pattern recognition in content, research assistance and synthesis</li>
+          </ul>
+        </div>
+        <div class="item">
+          <p class="item-title"><span>💻</span>Code Generation & Programming</p>
+          <ul>
+            <li>Code writing and completion, bug detection and debugging</li>
+            <li>Code explanation and documentation, multiple programming language support</li>
+          </ul>
+        </div>
+        <div class="item">
+          <p class="item-title"><span>🧠</span>Reasoning & Problem Solving</p>
+          <ul>
+            <li>Step-by-step problem breakdown, logical reasoning and analysis</li>
+            <li>Decision support and recommendations</li>
+          </ul>
+        </div>
+        <div class="item">
+          <p class="item-title"><span>🌍</span>Translation & Language Tasks</p>
+          <ul>
+            <li>High-quality translation between languages, grammar correction</li>
+            <li>Language learning assistance, cultural context understanding</li>
+          </ul>
+        </div>
+      </div>
+      <div class="column">
+        <h2 class="limitations-title">Current Limitations</h2>
+        <div class="item">
+          <p class="item-title"><span>⚠️</span>Knowledge & Information</p>
+          <ul>
+            <li>Training data cutoff (knowledge gaps), cannot access real-time information</li>
+            <li>May generate outdated facts, no internet browsing capability</li>
+          </ul>
+        </div>
+        <div class="item">
+          <p class="item-title"><span>🌀</span>Hallucinations & Accuracy</p>
+          <ul>
+            <li>May generate convincing but false information, inconsistent factual accuracy</li>
+            <li>Cannot verify information independently, overconfident in incorrect responses</li>
+          </ul>
+        </div>
+        <div class="item">
+          <p class="item-title"><span>📏</span>Context Window Constraints</p>
+          <ul>
+            <li>Limited memory of long conversations, cannot process extremely long documents</li>
+            <li>Forgets earlier context when limit exceeded, token counting affects performance</li>
+          </ul>
+        </div>
+        <div class="item">
+          <p class="item-title"><span>🔢</span>Mathematical & Computational</p>
+          <ul>
+            <li>Complex arithmetic calculation errors, inconsistent with multi-step math</li>
+            <li>Cannot execute code or verify results, struggles with precise numerical tasks</li>
+          </ul>
+        </div>
+        <div class="item">
+          <p class="item-title"><span>👁️</span>Sensory & Multimodal</p>
+          <ul>
+            <li>Cannot see images or process visual data, no audio processing capabilities</li>
+            <li>Limited to text-based interactions, cannot access files or external systems</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <div class="footer-content">
+        <div class="context-impact-container">
+          <h3 class="footer-title">Context Window Impact on Tasks</h3>
+          <div class="context-columns">
+            <div class="context-box">
+              <h4>Small Context (4K tokens)</h4>
+              <p><span>✅</span> <b>Good for:</b> Quick Q&A, short summaries, simple code</p>
+              <p><span>❌</span> <b>Limited:</b> Long document analysis, extended conversations</p>
+            </div>
+            <div class="context-box">
+              <h4>Medium Context (32K tokens)</h4>
+              <p><span>✅</span> <b>Good for:</b> Document analysis, code review, research papers</p>
+              <p><span>❌</span> <b>Limited:</b> Book-length analysis, multi-document tasks</p>
+            </div>
+            <div class="context-box">
+              <h4>Large Context (200K+)</h4>
+              <p><span>✅</span> <b>Good for:</b> Comprehensive analysis, entire codebases</p>
+              <p><span>❌</span> <b>Limited:</b> Still cannot access external data or real-time info</p>
+            </div>
+          </div>
+        </div>
+        <div class="mitigation-box">
+          <h4><span>🛡️</span>Mitigation Strategies</h4>
+          <ul>
+            <li><strong>Fact-checking:</strong> Verify important information independently.</li>
+            <li><strong>Prompt engineering:</strong> Use clear, specific instructions.</li>
+            <li><strong>Context management:</strong> Break large tasks into smaller chunks.</li>
+            <li><strong>Human oversight:</strong> Always review critical outputs.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide 48: Build Your Own AI Assistant</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a192f;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: #0a192f;
+      color: #ccd6f6;
+      display: flex;
+      flex-direction: column;
+      position: relative; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.95)), url('images/ai_brain_neural_network_blue_visualization.jpg');
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: overlay;
+      opacity: 0.6;
+      z-index: 1;
+    }
+    
+    .slide::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('images/AI-Applications-Real-World-Technology-Innovation.jpg');
+        background-size: cover;
+        background-position: center right;
+        opacity: 0.1;
+        z-index: 2;
+        clip-path: polygon(60% 0, 100% 0, 100% 100%, 40% 100%);
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 3;
+      padding: 40px 60px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    header h1 {
+      font-size: 48px;
+      color: #64ffda;
+      margin: 0;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(100, 255, 218, 0.3);
+    }
+
+    header h2 {
+      font-size: 20px;
+      color: #8892b0;
+      margin: 5px 0 0;
+      font-weight: 400;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 30px;
+      flex-grow: 1; 
+    }
+
+    .left-column, .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .code-container {
+        background-color: rgba(23, 42, 69, 0.85);
+        border: 1px solid #173a5e;
+        border-radius: 8px;
+        padding: 20px;
+        overflow-y: auto;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        flex-grow: 1;
+    }
+
+    pre {
+      margin: 0;
+    }
+    
+    code {
+      font-family: 'Fira Code', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #ccd6f6;
+    }
+    
+    .code-keyword { color: #569cd6; }
+    .code-class { color: #4ec9b0; }
+    .code-function { color: #dcdcaa; }
+    .code-string { color: #ce9178; }
+    .code-parameter { color: #9cdcfe; }
+    .code-self { color: #c586c0; }
+    .code-comment { color: #6a9955; }
+
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    
+    .option-card {
+        background-color: rgba(23, 42, 69, 0.7);
+        border: 1px solid #173a5e;
+        border-radius: 6px;
+        padding: 15px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .option-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        border-color: #64ffda;
+    }
+    
+    .option-card h4 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+        color: #64ffda;
+        font-weight: 600;
+    }
+
+    .option-card p {
+        margin: 0;
+        font-size: 13px;
+        color: #8892b0;
+        line-height: 1.5;
+    }
+
+    .callout {
+        background-color: rgba(23, 42, 69, 0.7);
+        border-left: 4px solid #64ffda;
+        padding: 15px 20px;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .callout h3 {
+      margin: 0 0 5px 0;
+      font-size: 18px;
+      color: #ccd6f6;
+    }
+
+    .callout p {
+      margin: 0;
+      font-size: 14px;
+      color: #8892b0;
+    }
+
+    .challenge {
+        background-color: rgba(100, 255, 218, 0.1);
+        border: 1px dashed #64ffda;
+        padding: 15px 20px;
+        border-radius: 6px;
+        text-align: center;
+    }
+    
+    .challenge h3 {
+        margin: 0;
+        color: #64ffda;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    footer {
+      position: relative;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 10px 60px;
+      background-color: rgba(10, 25, 47, 0.8);
+      color: #8892b0;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 5;
+      box-sizing: border-box;
+      border-top: 1px solid #173a5e;
+    }
+    
+    footer span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="slide-content">
+      <header>
+        <h1>Build Your Own AI Assistant</h1>
+        <h2>Part 4: Creative Applications - Capstone Project</h2>
+      </header>
+      
+      <div class="main-grid">
+        <div class="left-column">
+          <div class="code-container">
+            <pre><code><span class="code-keyword">class</span> <span class="code-class">PersonalAIAssistant</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-self">self</span>, <span class="code-parameter">name</span>, <span class="code-parameter">specialty</span>, <span class="code-parameter">personality</span>):
+        <span class="code-self">self</span>.name = <span class="code-parameter">name</span>
+        <span class="code-self">self</span>.specialty = <span class="code-parameter">specialty</span>
+        <span class="code-self">self</span>.personality = <span class="code-parameter">personality</span>
+        
+    <span class="code-keyword">def</span> <span class="code-function">get_system_message</span>(<span class="code-self">self</span>):
+        <span class="code-keyword">return</span> <span class="code-string">f"""You are {</span><span class="code-self">self</span><span class="code-string">.name}, a helpful AI assistant.
+        Specialties: {</span><span class="code-self">self</span><span class="code-string">.specialty}
+        Personality: {</span><span class="code-self">self</span><span class="code-string">.personality}
+        Always respond in character with expertise and helpfulness."""</span>
+        
+    <span class="code-keyword">def</span> <span class="code-function">chat</span>(<span class="code-self">self</span>, <span class="code-parameter">user_message</span>):
+        response = litellm.completion(
+            model=<span class="code-string">"gpt-3.5-turbo"</span>,
+            messages=[
+                {<span class="code-string">"role"</span>: <span class="code-string">"system"</span>, <span class="code-string">"content"</span>: <span class="code-self">self</span>.get_system_message()},
+                {<span class="code-string">"role"</span>: <span class="code-string">"user"</span>, <span class="code-string">"content"</span>: <span class="code-parameter">user_message</span>}
+            ],
+            temperature=<span class="code-number">0.6</span>
+        )
+        <span class="code-keyword">return</span> response.choices[<span class="code-number">0</span>].message.content</code></pre>
+          </div>
+        </div>
+        
+        <div class="right-column">
+          <div class="options-grid">
+            <div class="option-card">
+              <h4>🎓 Study Buddy</h4>
+              <p>Academic help, homework assistance, concept explanation</p>
+            </div>
+            <div class="option-card">
+              <h4>💻 Code Mentor</h4>
+              <p>Programming guidance, debugging help, best practices</p>
+            </div>
+            <div class="option-card">
+              <h4>🎨 Creative Partner</h4>
+              <p>Writing assistance, brainstorming, idea generation</p>
+            </div>
+            <div class="option-card">
+              <h4>📅 Personal Organizer</h4>
+              <p>Task management, scheduling, productivity tips</p>
+            </div>
+          </div>
+          
+          <div class="callout">
+            <h3>🚀 Enhancement Ideas</h3>
+            <p>Add memory, conversation history, or specialized knowledge bases.</p>
+          </div>
+
+          <div class="challenge">
+            <h3>🏆 Student Challenge: Create & Demo!</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <footer>
+      <span>⏱️ 40-45 minutes</span>
+      <span>Lab Step 15/17</span>
+      <span>🏠 Build & Create</span>
+    </footer>
+  </div>
+</body>
+</html>

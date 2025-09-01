@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide 36: API Key Setup & Configuration</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Fira+Code:wght@400;500&display=swap');
+
+    :root {
+      --dark-navy: #0A192F;
+      --navy: #112240;
+      --light-navy: #233554;
+      --slate: #8892B0;
+      --light-slate: #A8B2D1;
+      --lightest-slate: #CCD6F6;
+      --green: #64FFDA;
+      --white: #E6F1FF;
+      --font-sans: 'Inter', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: var(--dark-navy);
+      color: var(--light-slate);
+      font-family: var(--font-sans);
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      padding: 40px 60px;
+      opacity: 0;
+      animation: fadeIn 0.5s ease-in-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    header {
+      flex-shrink: 0;
+      padding-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--green);
+      margin: 0 0 5px 0;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 20px;
+      color: var(--slate);
+      margin: 0;
+    }
+
+    .content-grid {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 30px; 
+    }
+
+    .panel {
+      background-color: var(--navy);
+      border: 1px solid var(--light-navy);
+      border-radius: 8px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .panel:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+    }
+
+    .panel h2 {
+      font-size: 24px;
+      color: var(--lightest-slate);
+      margin: 0 0 20px 0;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--light-navy);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .left-panel ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--slate);
+    }
+
+    .left-panel li {
+      display: flex;
+      margin-bottom: 18px;
+    }
+    
+    .left-panel li::before {
+      content: '→';
+      color: var(--green);
+      margin-right: 15px;
+      font-weight: bold;
+    }
+    
+    .left-panel li code {
+      font-family: var(--font-mono);
+      color: var(--green);
+      background-color: var(--light-navy);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 15px;
+    }
+
+    .right-panel p {
+        margin: 0 0 10px 0;
+        font-size: 17px;
+        line-height: 1.5;
+        color: var(--light-slate);
+    }
+
+    .code-block {
+      background-color: var(--dark-navy);
+      border: 1px solid var(--light-navy);
+      border-radius: 5px;
+      padding: 15px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      white-space: pre;
+      color: var(--white);
+      margin-top: 5px;
+      margin-bottom: 15px; 
+    }
+    
+    .code-block .comment { color: #8094b3; }
+    .code-block .keyword { color: #c792ea; }
+    .code-block .string { color: #c3e88d; }
+    .code-block .function { color: #82aaff; }
+    .code-block .variable { color: #ffcb6b; }
+
+
+    footer {
+      flex-shrink: 0;
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 1px solid var(--light-navy);
+      font-size: 16px;
+      color: var(--slate);
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <header>
+      <h1>API Key Setup & Configuration</h1>
+      <p>Step 3: Secure API Authentication Setup</p>
+    </header>
+
+    <main class="content-grid">
+      <div class="panel left-panel">
+        <h2>🔑 Obtaining OpenAI API Key</h2>
+        <ul>
+          <li>Sign up or log in at <code>platform.openai.com</code>.</li>
+          <li>Navigate to your dashboard profile menu: "View API keys".</li>
+          <li>Click "+ Create new secret key".</li>
+          <li>Copy the key immediately. You won't be able to see it again for security reasons.</li>
+        </ul>
+      </div>
+
+      <div class="panel right-panel">
+        <h2>⚙️ Configuration</h2>
+        <p>Set the key as an environment variable to keep it secure.</p>
+        <div class="code-block">
+<span class="comment"># Windows (Command Prompt)</span>
+<span class="keyword">set</span> OPENAI_API_KEY=your_key_here
+
+<span class="comment"># macOS / Linux (Bash/Zsh)</span>
+<span class="keyword">export</span> OPENAI_API_KEY=your_key_here
+        </div>
+        <p>Or use a <code>.env</code> file with Python for project-specific keys:</p>
+        <div class="code-block">
+<span class="comment"># 1. In your project, create a .env file:</span>
+<span class="variable">OPENAI_API_KEY</span>=<span class="string">"your_key_here"</span>
+
+<span class="comment"># 2. In your Python script:</span>
+<span class="comment"># pip install python-dotenv</span>
+<span class="keyword">import</span> os
+<span class="keyword">from</span> dotenv <span class="keyword">import</span> load_dotenv
+
+<span class="function">load_dotenv()</span>
+<span class="variable">api_key</span> = os.<span class="function">getenv</span>(<span class="string">'OPENAI_API_KEY'</span>)
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <span>⏱️ 10-15 minutes</span>
+      <span style="margin: 0 20px;">|</span>
+      <span>Lab Step 3/17</span>
+      <span style="margin: 0 20px;">|</span>
+      <span>🔒 Security Critical</span>
+    </footer>
+  </div>
+</body>
+</html>

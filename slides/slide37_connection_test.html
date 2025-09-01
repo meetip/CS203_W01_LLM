@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide 37: First Successful Connection Test</title>
+  <style>
+    /* Reset and Base Styles */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background-color: #1a1a1a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    }
+
+    /* Slide Container */
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background-color: #0a192f;
+      background-image: linear-gradient(rgba(10, 25, 47, 0.92), rgba(10, 25, 47, 0.98)), url('images/ai_brain_neural_network_blue_visualization.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      color: #e6f1ff;
+      overflow: auto;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header */
+    .header {
+      padding: 30px 50px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0, 123, 255, 0.3);
+      animation: fadeIn 0.5s ease-out 0.1s both;
+    }
+    .header h1 {
+      font-size: 44px;
+      margin: 0;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(0, 123, 255, 0.6);
+    }
+    .header p {
+      font-size: 20px;
+      margin: 5px 0 0;
+      color: #8892b0;
+      font-weight: 400;
+    }
+
+    /* Main Content Area */
+    .main-content {
+      display: flex;
+      flex: 1;
+      padding: 25px 50px 20px;
+      gap: 30px;
+      animation: fadeIn 0.5s ease-out 0.3s both;
+    }
+
+    .left-column, .right-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    /* Code Block */
+    .code-block {
+      background-color: rgba(0, 30, 60, 0.7);
+      border: 1px solid #004a7c;
+      border-radius: 8px;
+      padding: 20px;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 15px;
+      line-height: 1.6;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .code-block::before {
+      content: 'Python: Test Script';
+      position: absolute;
+      top: 0px;
+      left: 20px;
+      background: #007bff;
+      color: white;
+      padding: 2px 10px;
+      border-radius: 0 0 5px 5px;
+      font-size: 12px;
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: 500;
+    }
+     .code-block pre {
+      margin: 15px 0 0;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+    .code-block code {
+      display: block;
+      user-select: all;
+    }
+    .code-block .keyword { color: #569cd6; font-weight: bold; }
+    .code-block .string { color: #ce9178; }
+    .code-block .function { color: #dcdcaa; }
+    .code-block .variable { color: #9cdcfe; }
+
+    /* Expected Response Panel */
+    .response-panel {
+      background-color: rgba(10, 40, 20, 0.7);
+      border: 1px solid #28a745;
+      border-radius: 8px;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 20px rgba(40, 167, 69, 0.4);
+    }
+    .response-header {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 15px;
+      font-weight: bold;
+      border-radius: 7px 7px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .response-content {
+      padding: 15px;
+      font-size: 16px;
+      font-style: italic;
+      color: #c7e6c9;
+      background-color: rgba(10, 25, 47, 0.5);
+      border-radius: 0 0 7px 7px;
+    }
+    .response-content::before { content: '💬 '; }
+    
+    /* Troubleshooting Checklist */
+    .troubleshooting {
+      background-color: rgba(0, 30, 60, 0.5);
+      border: 1px solid rgba(0, 123, 255, 0.2);
+      border-radius: 8px;
+      padding: 15px 20px;
+    }
+    .troubleshooting h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #61afef;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(0, 123, 255, 0.3);
+      padding-bottom: 5px;
+    }
+    .troubleshooting ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .troubleshooting li {
+      padding: 4px 0;
+      font-size: 15px;
+      color: #a8b2d1;
+      display: flex;
+      align-items: center;
+    }
+    .troubleshooting li::before {
+      content: '✅';
+      color: #4CAF50;
+      font-size: 16px;
+      margin-right: 12px;
+      text-shadow: 0 0 5px rgba(76, 175, 80, 0.7);
+    }
+
+    /* Success Celebration */
+    .success-celebration {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      padding: 12px;
+      margin: 0 50px 20px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(40, 167, 69, 0.2), rgba(40, 167, 69, 0.35), rgba(40, 167, 69, 0.2));
+      border: 1px solid #28a745;
+      color: #e6f1ff;
+      text-shadow: 0 0 10px #28a745;
+      animation: fadeIn 0.5s ease-out 0.6s both;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 12px 50px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-top: 1px solid rgba(0, 123, 255, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+      color: #8892b0;
+      font-weight: 500;
+      animation: fadeIn 0.5s ease-out 0.8s both;
+    }
+    .footer span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    
+    <header class="header">
+      <h1>First Successful Connection Test</h1>
+      <p>Step 4: Verify Everything Works Together</p>
+    </header>
+
+    <main class="main-content">
+      <div class="left-column">
+        <div class="code-block">
+          <pre><code><span class="keyword">import</span> <span class="variable">litellm</span>
+
+<span class="variable">response</span> = <span class="variable">litellm</span>.<span class="function">completion</span>(
+  model=<span class="string">"gpt-3.5-turbo"</span>,
+  messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Hello! Can you confirm the connection is working?"</span>}]
+)
+<span class="keyword">print</span>(<span class="variable">response</span>.choices[0].message.content)</code></pre>
+        </div>
+      </div>
+      <div class="right-column">
+        <div class="response-panel">
+          <div class="response-header">✔️ Connection Status: SUCCESS</div>
+          <div class="response-content">"Yes, the connection is working perfectly! I am ready to assist you."</div>
+        </div>
+        <div class="troubleshooting">
+          <h3>Pre-flight Checklist</h3>
+          <ul>
+            <li>Python environment working</li>
+            <li>LiteLLM installed correctly</li>
+            <li>API key configured</li>
+            <li>Internet connection active</li>
+            <li>No firewall blocking</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+    
+    <div class="success-celebration">
+      🎉 Congratulations! You're Ready for LLM Development 🎉
+    </div>
+
+    <footer class="footer">
+      <span>⏱️ 5-10 minutes</span>
+      <span>Lab Step 4/17</span>
+      <span>🎯 Milestone Achieved</span>
+    </footer>
+
+  </div>
+</body>
+</html>

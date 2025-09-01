@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokenization Fundamentals</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      height: 100vh;
+      background-color: #f0f0f0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      overflow-y: auto;
+      background-color: #ffffff;
+      display: flex;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: auto;
+    }
+
+    .left-column {
+      width: 65%;
+      padding: 50px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      color: #333;
+    }
+
+    .right-column {
+      width: 35%;
+      background-color: #FEF6FA; /* Light pink background to match image */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+    }
+
+    .right-column img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    h1 {
+      font-size: 44px;
+      color: #0d2a4e;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      color: #556a83;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 24px;
+      color: #0d2a4e;
+      font-weight: 600;
+      margin-bottom: 12px;
+      margin-top: 15px;
+    }
+    
+    ul {
+      list-style-position: outside;
+      padding-left: 25px;
+    }
+
+    li {
+      font-size: 17px;
+      color: #4a4a4a;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    li::marker {
+      color: #007aff;
+    }
+
+    .examples-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .example-box {
+      flex: 1;
+      background-color: #f7f9fc;
+      border: 1px solid #e0e6ed;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    .example-box p {
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+    }
+    
+    .example-box code {
+      display: block;
+      background-color: #eef2f7;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-family: 'Courier New', Courier, monospace;
+      color: #3d526e;
+      font-size: 13px;
+      margin-bottom: 8px;
+      word-wrap: break-word;
+    }
+    
+    .example-box .token-count {
+      color: #007aff;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .tip-box {
+      margin-top: auto; /* Pushes the box to the bottom */
+      padding: 12px 18px;
+      background-color: #e6f4ff;
+      border-left: 4px solid #007aff;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tip-box span {
+      font-size: 24px;
+    }
+
+    .tip-box p {
+      font-size: 15px;
+      color: #0d2a4e;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide">
+    <div class="left-column">
+      <h1>Tokenization Fundamentals</h1>
+      <p class="subtitle">Breaking Text Into Processing Units</p>
+
+      <h2>What Are Tokens?</h2>
+      <ul>
+        <li>Smallest units of text that LLMs can process.</li>
+        <li>Not always words: Can be parts of words, whole words, or punctuation.</li>
+        <li>Subword tokenization: Most modern LLMs use BPE (Byte-Pair Encoding).</li>
+        <li>Language agnostic: Works across different languages and scripts.</li>
+      </ul>
+
+      <h2>Tokenization Examples</h2>
+      <div class="examples-container">
+        <div class="example-box">
+          <p>"Hello, world!"</p>
+          <code>["Hello", ",", " world", "!"]</code>
+          <div class="token-count">→ Token count: 4 tokens</div>
+        </div>
+        <div class="example-box">
+          <p>"Understanding tokenization"</p>
+          <code>["Under", "standing", " token", "ization"]</code>
+          <div class="token-count">→ Token count: 4 tokens</div>
+        </div>
+        <div class="example-box">
+          <p>"GPT-4 is amazing!"</p>
+          <code>["GPT", "-", "4", " is", " amazing", "!"]</code>
+          <div class="token-count">→ Token count: 6 tokens</div>
+        </div>
+      </div>
+      
+      <h2>Key Implications</h2>
+      <ul>
+        <li><b>Context Limits:</b> Token count determines what fits in a context window.</li>
+        <li><b>Cost Factor:</b> Many APIs charge per token processed.</li>
+        <li><b>Performance Impact:</b> More tokens can lead to longer processing times.</li>
+        <li><b>Language Efficiency:</b> Some languages are more "token-efficient" than others.</li>
+      </ul>
+
+      <div class="tip-box">
+        <span>🛠️</span>
+        <p><b>Pro Tip:</b> Use tokenizer tools (like tiktoken for OpenAI models) to count tokens before API calls to optimize cost and performance.</p>
+      </div>
+
+    </div>
+    <div class="right-column">
+      <img src="images/tokenization-nlp-text-processing-diagram-educational.jpg" alt="Diagram showing the process of tokenization from a sentence to individual tokens.">
+    </div>
+  </div>
+</body>
+</html>

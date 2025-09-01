@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summarization Task - Step by Step</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 1280px; 
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .slide {
+            width: 1280px; 
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box; 
+        }
+
+        .header {
+            padding: 40px 60px 20px 60px;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            font-size: 38px;
+            color: #0d2c4a;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .header h2 {
+            font-size: 20px;
+            color: #5a7b9c;
+            margin: 5px 0 0 0;
+            font-weight: 400;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            padding: 10px 60px 30px 60px;
+            gap: 24px; 
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .left-column {
+            flex: 1 1 55%;
+        }
+
+        .right-column {
+            flex: 1 1 45%;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #dfe7f0;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 24px;
+            display: flex;
+            flex-direction: column; 
+        }
+        
+        .card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1c3d5a;
+            margin: 0 0 16px 0;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e9eef2;
+        }
+
+        #sample-article-card {
+            flex-grow: 1;
+        }
+
+        #sample-article-card .article-text {
+            font-size: 14px;
+            line-height: 1.65;
+            color: #334155;
+            overflow-y: auto;
+            padding-right: 10px; /* For scrollbar spacing */
+        }
+         /* Custom scrollbar for webkit browsers */
+        .article-text::-webkit-scrollbar {
+            width: 6px;
+        }
+        .article-text::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .article-text::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .article-text p {
+            margin: 0 0 1em 0;
+        }
+        .article-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        #code-card {
+            padding: 0;
+            background-color: #282c34;
+        }
+        #code-card h3 {
+            padding: 24px 24px 12px 24px;
+            margin-bottom:0;
+            color: #e1e8f2;
+            border-bottom: 1px solid #444c5a;
+        }
+
+        pre {
+            margin: 0;
+            font-family: 'Fira Code', monospace;
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: #abb2bf;
+            padding: 20px 24px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .code-keyword { color: #c678dd; }
+        .code-string { color: #98c379; }
+        .code-comment { color: #6a9955; }
+        .code-function { color: #61afef; }
+        .code-param { color: #d19a66; }
+
+        .bottom-cards-container {
+            display: flex;
+            gap: 24px;
+        }
+
+        .bottom-cards-container .card {
+            flex: 1;
+        }
+        
+        .card ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .card li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .card li:last-child {
+            margin-bottom: 0;
+        }
+
+        .card li::before {
+            content: '✓';
+            color: #22c55e;
+            font-weight: 600;
+            margin-right: 10px;
+            margin-top: 1px;
+        }
+
+        .footer {
+            height: 50px;
+            background-color: #0d2c4a;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            font-size: 15px;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+        .footer-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <header class="header">
+            <h1>Summarization Task - Step by Step</h1>
+            <h2>Advanced Text Processing with LLMs</h2>
+        </header>
+
+        <main class="main-content">
+            <div class="column left-column">
+                <div class="card" id="sample-article-card">
+                    <h3>Sample Article</h3>
+                    <div class="article-text">
+                        <p>Recent advancements in artificial intelligence, particularly in the realm of large language models (LLMs), have revolutionized how we interact with information. Models like GPT-4 and Claude 3 can now understand and generate human-like text with unprecedented accuracy, enabling applications from sophisticated chatbots to automated content creation.</p>
+                        <p>These models are trained on vast datasets, allowing them to grasp complex nuances, contexts, and even creative styles. The underlying architecture, often based on the Transformer model, utilizes attention mechanisms to weigh the importance of different words in the input text, leading to more coherent and relevant outputs.</p>
+                        <p>As these technologies continue to evolve, they are being integrated into various industries, including software development, healthcare, and finance, to automate tasks, analyze data, and drive innovation. However, this rapid progress also brings challenges, such as ethical considerations, the potential for misuse, and the need for robust evaluation metrics to ensure reliability and prevent the spread of misinformation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column right-column">
+                <div class="card" id="code-card">
+                    <h3>Summarization Code</h3>
+                    <pre><code><span class="code-param">long_text</span> = <span class="code-string">"""***[Sample article text from the left panel]***"""</span>
+
+<span class="code-param">response</span> = <span class="code-param">litellm</span>.<span class="code-function">completion</span>(
+    <span class="code-param">model</span>=<span class="code-string">"gpt-3.5-turbo"</span>,
+    <span class="code-param">messages</span>=[
+        {<span class="code-string">"role"</span>: <span class="code-string">"system"</span>, <span class="code-string">"content"</span>: <span class="code-string">"You are a professional summarizer. Create concise, accurate summaries."</span>},
+        {<span class="code-string">"role"</span>: <span class="code-string">"user"</span>, <span class="code-string">"content"</span>: <span class="code-function">f"Summarize this article in 2-3 sentences:\n\n{</span><span class="code-param">long_text</span><span class="code-function">}"</span>}
+    ],
+    <span class="code-param">max_tokens</span>=<span class="code-number">150</span>,
+    <span class="code-param">temperature</span>=<span class="code-number">0.2</span>
+)</code></pre>
+                </div>
+
+                <div class="bottom-cards-container">
+                    <div class="card">
+                        <h3>Best Practices</h3>
+                        <ul>
+                            <li>Use system messages for role definition.</li>
+                            <li>Specify desired summary length clearly.</li>
+                            <li>Lower temperature for factual accuracy.</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Quality Indicators</h3>
+                        <ul>
+                            <li><b>Concise:</b> Captures main points briefly.</li>
+                            <li><b>Accurate:</b> Faithfully represents source facts.</li>
+                            <li><b>Coherent:</b> Reads smoothly and logically.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-item">⏱️ 25-30 minutes</div>
+            <div class="footer-item">Lab Step 7/17</div>
+            <div class="footer-item">📄 Document Processing</div>
+        </footer>
+    </div>
+</body>
+</html>
